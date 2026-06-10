@@ -40,10 +40,28 @@ export default function ProjectFilter({ projects }) {
                         </div>
                         <p>{project.description}</p>
                         <ul className="tag-list" aria-label={`Technologies used for ${project.title}`}>
-                            {project.tech.map((item) => (
-                                <li key={item}>{item}</li>
-                            ))}
-                        </ul>
+                          {project.tech.map((item) => (
+                              <li key={item}>{item}</li>
+                          ))}
+                      </ul>
+
+                      <div className="project-card-actions">
+                          <a className="text-link" href={project.detail_url}>
+                              Case study
+                          </a>
+
+                          {project.url && (
+                              <a className="text-link" href={project.url} target="_blank" rel="noreferrer">
+                                  Live site
+                              </a>
+                          )}
+
+                          {project.source_url && (
+                              <a className="text-link" href={project.source_url} target="_blank" rel="noreferrer">
+                                  Code
+                              </a>
+                          )}
+                      </div>
                     </article>
                 ))}
             </div>

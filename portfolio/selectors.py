@@ -6,9 +6,10 @@ def get_projects():
     return [
         {
             "title": project.title,
-            "description": project.description,
+            "description": project.summary or project.description,
             "tech": [tech.name for tech in project.technologies.all()],
             "status": project.get_status_display(),
+            "detail_url": project.get_absolute_url(),
             "url": project.url,
             "source_url": project.source_url,
         }

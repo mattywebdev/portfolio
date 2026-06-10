@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.urls import reverse
 
 class Technology(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -38,3 +38,6 @@ class Project(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def get_absolute_url(self):
+        return reverse("portfolio:project_detail", kwargs={"slug": self.slug})

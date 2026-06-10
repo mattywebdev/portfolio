@@ -159,6 +159,8 @@ h1 {
     border: 1px solid #dfdfd7;
     border-radius: 8px;
     background: #ffffff;
+    display: flex;
+    flex-direction: column;
 }
 
 .project-card-header {
@@ -322,5 +324,22 @@ h1 {
 }
 
 .back-link:hover {
+    color: #111827;
+}
+
+.project-card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: auto;
+    padding-top: 24px;
+}
+
+.text-link {
+    color: #0f766e;
+    font-weight: 800;
+}
+
+.text-link:hover {
     color: #111827;
 }

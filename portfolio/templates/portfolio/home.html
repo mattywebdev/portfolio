@@ -25,15 +25,7 @@
 
             {{ projects|json_script:"projects-data" }}
 
-            <div
-                id="project-filter-root"
-                data-projects=""
-            ></div>
-
-            <script>
-                document.getElementById("project-filter-root").dataset.projects =
-                    document.getElementById("projects-data").textContent;
-            </script>
+            <div id="project-filter-root"></div>
     </section>
 
     <section id="skills" class="section">
@@ -42,11 +34,18 @@
             <h2>Skills</h2>
         </div>
 
-        <ul class="skill-list">
-            {% for skill in skills %}
-                <li>{{ skill }}</li>
+        <div class="skill-grid">
+            {% for group in skill_groups %}
+                <article class="skill-group">
+                    <h3>{{ group.title }}</h3>
+                    <ul class="skill-list">
+                        {% for skill in group.items %}
+                            <li>{{ skill }}</li>
+                        {% endfor %}
+                    </ul>
+                </article>
             {% endfor %}
-        </ul>
+        </div>
     </section>
 
     <section id="contact" class="section contact-section">

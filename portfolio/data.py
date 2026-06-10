@@ -14,12 +14,17 @@ PROJECTS = [
 ]
 
 
-SKILLS = [
-    "Python",
-    "Django",
-    "HTML",
-    "CSS",
-    "JavaScript",
-    "Git",
-    "Linux VPS",
+SKILL_GROUPS = [
+    {
+        "title": "Backend",
+        "items": ["Python", "Django", "SQLite", "PostgreSQL"],
+    },
+    {
+        "title": "Frontend",
+        "items": ["HTML", "CSS", "JavaScript", "React", "Vite"],
+    },
+    {
+        "title": "Tools & Deployment",
+        "items": ["Git", "GitHub", "Linux VPS", "Nginx", "Gunicorn"],
+    },
 ]

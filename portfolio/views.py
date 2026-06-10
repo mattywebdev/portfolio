@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from .data import PROJECTS, SKILLS
+from .data import PROJECTS, SKILL_GROUPS
 
 
 def home(request):
@@ -9,6 +9,6 @@ def home(request):
         "portfolio/home.html",
         {
             "projects": PROJECTS,
-            "skills": SKILLS,
+            "skill_groups": SKILL_GROUPS,
         },
     )

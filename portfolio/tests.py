@@ -18,3 +18,15 @@ class HomePageTests(TestCase):
 
         self.assertContains(response, "Affiliate Site")
         self.assertContains(response, "Portfolio Site")
+
+    def test_home_page_includes_projects_in_context(self):
+        response = self.client.get(reverse("portfolio:home"))
+
+        self.assertIn("projects", response.context)
+        self.assertEqual(len(response.context["projects"]), 2)
+
+    def test_home_page_includes_skill_groups_in_context(self):
+        response = self.client.get(reverse("portfolio:home"))
+
+        self.assertIn("skill_groups", response.context)
+        self.assertEqual(len(response.context["skill_groups"]), 3)

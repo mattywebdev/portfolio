@@ -144,6 +144,7 @@ h1 {
 .section {
     padding: 64px 0;
     border-top: 1px solid var(--border);
+    scroll-margin-top: 24px;
 }
 
 .section h2 {
@@ -577,6 +578,26 @@ h1 {
 @media (max-width: 760px) {
     .case-study-grid {
         grid-template-columns: 1fr;
+    }
+
+    .filter-bar {
+        flex-wrap: nowrap;
+        gap: 8px;
+        margin: 0 -16px;
+        padding: 0 16px 8px;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+        scroll-snap-type: x proximity;
+    }
+
+    .filter-bar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .filter-button {
+        flex: 0 0 auto;
+        scroll-snap-align: start;
     }
 
     .site-footer {

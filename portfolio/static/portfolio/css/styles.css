@@ -249,3 +249,33 @@ h1 {
         flex-direction: column;
     }
 }
+
+.react-projects {
+    display: grid;
+    gap: 18px;
+}
+
+.filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.filter-button {
+    min-height: 38px;
+    border: 1px solid #d6d6cf;
+    border-radius: 999px;
+    padding: 0 14px;
+    background: #ffffff;
+    color: #111827;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.filter-button:hover,
+.filter-button.active {
+    border-color: #111827;
+    background: #111827;
+    color: #ffffff;
+}

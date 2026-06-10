@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.title }} | Matty Dev{% endblock %}
+
+{% block content %}
+<main class="page">
+    <section class="section project-detail">
+        <a class="back-link" href="{% url 'portfolio:home' %}#projects">Back to projects</a>
+
+        <p class="eyebrow">{{ project.get_status_display }}</p>
+        <h1>{{ project.title }}</h1>
+
+        {% if project.summary %}
+            <p class="hero-copy">{{ project.summary }}</p>
+        {% else %}
+            <p class="hero-copy">{{ project.description }}</p>
+        {% endif %}
+
+        <ul class="tag-list" aria-label="Technologies used">
+            {% for tech in project.technologies.all %}
+                <li>{{ tech.name }}</li>
+            {% endfor %}
+        </ul>
+
+        <div class="hero-actions">
+            {% if project.url %}
+                <a class="button primary" href="{{ project.url }}" target="_blank" rel="noreferrer">Visit site</a>
+            {% endif %}
+
+            {% if project.source_url %}
+                <a class="button secondary" href="{{ project.source_url }}" target="_blank" rel="noreferrer">View code</a>
+            {% endif %}
+        </div>
+    </section>
+</main>
+{% endblock %}

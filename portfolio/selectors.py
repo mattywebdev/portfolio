@@ -18,3 +18,6 @@ def get_projects():
 
 def get_skill_groups():
     return SKILL_GROUPS
+
+def get_project_by_slug(slug):
+    return Project.objects.prefetch_related("technologies").get(slug=slug)

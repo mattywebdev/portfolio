@@ -1,8 +1,19 @@
-from .data import PROJECTS, SKILL_GROUPS
+from .data import SKILL_GROUPS
+from .models import Project
 
 
 def get_projects():
-    return PROJECTS
+    return [
+        {
+            "title": project.title,
+            "description": project.description,
+            "tech": [tech.name for tech in project.technologies.all()],
+            "status": project.get_status_display(),
+            "url": project.url,
+            "source_url": project.source_url,
+        }
+        for project in Project.objects.filter(featured=True).prefetch_related("technologies")
+    ]
 
 
 def get_skill_groups():

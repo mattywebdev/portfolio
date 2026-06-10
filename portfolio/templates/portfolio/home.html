@@ -8,7 +8,7 @@
         <p class="eyebrow">Django developer building useful web things</p>
         <h1>Hi, I’m Matty.</h1>
         <p class="hero-copy">
-            I build clean, practical web apps with Django, and this portfolio is where I’ll show the work properly.
+            I build clean, practical web apps with Django, and this portfolio is where I show the work properly.
         </p>
         <div class="hero-actions">
             <a class="button primary" href="#projects">View projects</a>
@@ -17,18 +17,52 @@
     </section>
 
     <section id="projects" class="section">
-        <h2>Projects</h2>
-        <p>Project cards will live here soon.</p>
+        <div class="section-heading">
+            <p class="eyebrow">Selected work</p>
+            <h2>Projects</h2>
+        </div>
+
+        <div class="project-grid">
+            {% for project in projects %}
+                <article class="project-card">
+                    <div class="project-card-header">
+                        <h3>{{ project.title }}</h3>
+                        <span>{{ project.status }}</span>
+                    </div>
+                    <p>{{ project.description }}</p>
+                    <ul class="tag-list" aria-label="Technologies used">
+                        {% for item in project.tech %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </article>
+            {% endfor %}
+        </div>
     </section>
 
     <section id="skills" class="section">
-        <h2>Skills</h2>
-        <p>Django, Python, HTML, CSS, JavaScript, and soon a tasteful little bit of React.</p>
+        <div class="section-heading">
+            <p class="eyebrow">Toolbox</p>
+            <h2>Skills</h2>
+        </div>
+
+        <ul class="skill-list">
+            {% for skill in skills %}
+                <li>{{ skill }}</li>
+            {% endfor %}
+        </ul>
     </section>
 
-    <section id="contact" class="section">
-        <h2>Contact</h2>
-        <p>Contact details and links will go here.</p>
+    <section id="contact" class="section contact-section">
+        <div>
+            <p class="eyebrow">Let’s build</p>
+            <h2>Contact</h2>
+            <p>
+                Want to talk about a project, a Django idea, or the site currently moving to the affiliate subdomain?
+            </p>
+        </div>
+
+        <a class="button primary" href="mailto:hello@matty-dev.com">hello@matty-dev.com</a>
     </section>
 </main>
 {% endblock %}

@@ -1,6 +1,4 @@
 {% extends "base.html" %}
-{% load static %}
-
 {% block title %}{{ project.title }} | Matty Dev{% endblock %}
 
 {% block content %}
@@ -34,7 +32,7 @@
         </div>
 
         {% if project.image %}
-            <img class="project-detail-image" src="{% static project.image.name %}" alt="{{ project.title }} screenshot">
+            <img class="project-detail-image" src="{{ project.image.url }}" alt="{{ project.title }} screenshot">
         {% endif %}
     </section>
 

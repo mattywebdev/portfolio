@@ -1,4 +1,6 @@
 from django.core.management.base import BaseCommand
+from django.conf import settings
+from django.core.files import File
 
 from portfolio.models import Project, Technology
 
@@ -15,7 +17,7 @@ PROJECTS = [
         "status": "live",
         "url": "https://shop.matty-dev.com",
         "source_url": "https://github.com/mattywebdev/django-music-shop",
-        "image": "portfolio/images/projects/django-music-shop.png",
+        "image": "portfolio/static/portfolio/images/projects/django-music-shop.png",
         "display_order": 1,
         "role": "Full-stack developer responsible for the Django backend, templates, shopping flow, REST endpoints, and deployment.",
         "problem": (
@@ -45,7 +47,7 @@ PROJECTS = [
         "status": "live",
         "url": "https://affiliate.matty-dev.com",
         "source_url": "https://github.com/mattywebdev/affiliate-site",
-        "image": "portfolio/images/projects/affiliate-review-site.png",
+        "image": "portfolio/static/portfolio/images/projects/affiliate-review-site.png",
         "display_order": 2,
         "role": "Full-stack developer responsible for product/article models, Django views, templates, click analytics, and VPS deployment.",
         "problem": (
@@ -74,7 +76,7 @@ PROJECTS = [
         "status": "live",
         "url": "https://florist.matty-dev.com",
         "source_url": "https://github.com/mattywebdev/willow-thorn-florist-demo",
-        "image": "portfolio/images/projects/willow-thorn-florist-demo.png",
+        "image": "portfolio/static/portfolio/images/projects/willow-thorn-florist-demo.png",
         "display_order": 3,
         "role": "Full-stack developer responsible for the Django app, responsive frontend, admin-managed bouquets, image handling, and deployment.",
         "problem": (
@@ -102,7 +104,7 @@ PROJECTS = [
         "status": "in_progress",
         "url": "",
         "source_url": "",
-        "image": "portfolio/images/projects/portfolio-site.png",
+        "image": "portfolio/static/portfolio/images/projects/portfolio-site.png",
         "display_order": 4,
         "role": "Full-stack developer building the site, data model, admin workflow, templates, styling, and React island.",
         "problem": (
@@ -132,11 +134,21 @@ class Command(BaseCommand):
         for source_project_data in PROJECTS:
             project_data = source_project_data.copy()
             technology_names = project_data.pop("technologies")
+            image_path = project_data.pop("image")
             seeded_slugs.append(project_data["slug"])
             project, _created = Project.objects.update_or_create(
                 slug=project_data["slug"],
                 defaults={**project_data, "featured": True},
             )
+
+            image_source_path = settings.BASE_DIR / image_path
+            should_seed_image = (
+                not project.image
+                or project.image.name.startswith("portfolio/images/")
+            )
+            if image_source_path.exists() and should_seed_image:
+                with image_source_path.open("rb") as image_file:
+                    project.image.save(image_source_path.name, File(image_file), save=True)
 
             technologies = [
                 Technology.objects.get_or_create(name=name)[0]

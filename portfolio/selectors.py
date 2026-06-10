@@ -1,4 +1,3 @@
-from django.templatetags.static import static
 from django.shortcuts import get_object_or_404
 
 from .data import ABOUT, PROFILE_LINKS, SERVICES, SKILL_GROUPS
@@ -13,7 +12,7 @@ def get_projects():
             "tech": [tech.name for tech in project.technologies.all()],
             "status": project.get_status_display(),
             "detail_url": project.get_absolute_url(),
-            "image_url": static(project.image.name) if project.image else "",
+            "image_url": project.image.url if project.image else "",
             "url": project.url,
             "source_url": project.source_url,
         }

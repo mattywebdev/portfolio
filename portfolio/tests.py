@@ -1,8 +1,35 @@
 from django.test import TestCase
 from django.urls import reverse
 
+from .models import Project, Technology
+
 
 class HomePageTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        django = Technology.objects.create(name="Django")
+        python = Technology.objects.create(name="Python")
+        react = Technology.objects.create(name="React")
+        vite = Technology.objects.create(name="Vite")
+
+        affiliate_site = Project.objects.create(
+            title="Affiliate Site",
+            description="My affiliate website.",
+            status="live",
+            featured=True,
+            display_order=1,
+        )
+        affiliate_site.technologies.add(django, python)
+
+        portfolio_site = Project.objects.create(
+            title="Portfolio Site",
+            description="My portfolio website.",
+            status="in_progress",
+            featured=True,
+            display_order=2,
+        )
+        portfolio_site.technologies.add(django, python, react, vite)
+
     def test_home_page_loads(self):
         response = self.client.get(reverse("portfolio:home"))
 

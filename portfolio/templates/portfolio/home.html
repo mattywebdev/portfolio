@@ -6,14 +6,42 @@
 {% block content %}
 <main class="page">
     <section class="hero">
-        <p class="eyebrow">Django developer building useful web things</p>
-        <h1>Hi, I’m Matty.</h1>
+        <p class="eyebrow">Django websites, business tools, and deployed web apps</p>
+        <h1>Django websites for businesses, portfolios, and real products.</h1>
         <p class="hero-copy">
-            I build clean, practical web apps with Django, and this portfolio is where I show the work properly.
+            I’m Matty, a self-taught Django developer building admin-managed websites,
+            product/catalog pages, REST-backed apps, and Linux VPS deployments.
         </p>
         <div class="hero-actions">
-            <a class="button primary" href="#projects">View projects</a>
-            <a class="button secondary" href="#contact">Contact me</a>
+            <a class="button primary" href="#projects">View my work</a>
+            <a class="button secondary" href="#contact">Work with me</a>
+        </div>
+
+        <ul class="proof-strip" aria-label="Key capabilities">
+            <li>Django admin</li>
+            <li>Responsive pages</li>
+            <li>REST APIs</li>
+            <li>VPS deployment</li>
+        </ul>
+    </section>
+
+    <section id="about" class="section about-section">
+        <div class="section-heading">
+            <p class="eyebrow">{{ about.eyebrow }}</p>
+            <h2>{{ about.title }}</h2>
+        </div>
+
+        <div class="about-grid">
+            <p>{{ about.body }}</p>
+            <div class="about-panel">
+                <h3>{{ about.assurance_title }}</h3>
+                <p>{{ about.assurance }}</p>
+                <div class="profile-links">
+                    {% for link in profile_links %}
+                        <a class="text-link" href="{{ link.url }}" target="_blank" rel="noreferrer">{{ link.label }}</a>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </section>
 
@@ -26,6 +54,56 @@
             {{ projects|json_script:"projects-data" }}
 
             <div id="project-filter-root"></div>
+    </section>
+
+    <section id="services" class="section services-section">
+        <div class="section-heading">
+            <p class="eyebrow">{{ services.eyebrow }}</p>
+            <h2>{{ services.title }}</h2>
+            <p>{{ services.intro }}</p>
+        </div>
+
+        <div class="service-grid">
+            {% for service in services.items %}
+                <article class="service-card">
+                    <h3>{{ service.title }}</h3>
+                    <p>{{ service.description }}</p>
+                </article>
+            {% endfor %}
+        </div>
+
+        <div class="process-strip" aria-label="Typical project process">
+            {% for step in services.process %}
+                <span>{{ step }}</span>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section id="contact" class="section contact-section">
+        <div class="contact-copy">
+            <p class="eyebrow">Let’s build</p>
+            <h2>Ready to talk?</h2>
+            <p>
+                I’m open to junior web developer roles, IT support opportunities, and practical
+                business website projects. If you like the work here, send me a message and I’ll
+                get back to you clearly.
+            </p>
+
+            <ul class="contact-points">
+                <li>For recruiters: I can share project context, code, and how I approach learning.</li>
+                <li>For businesses: I can help with clear websites, editable content, and deployment.</li>
+                <li>For both: expect honest communication and realistic next steps.</li>
+            </ul>
+        </div>
+
+        <div class="contact-card">
+            <p class="eyebrow">Email me</p>
+            <a class="contact-email" href="mailto:hello@matty-dev.com">hello@matty-dev.com</a>
+            <p>
+                Tell me what you need, what stage it’s at, and any links that would help me
+                understand the project or role.
+            </p>
+        </div>
     </section>
 
     <section id="skills" class="section">
@@ -46,18 +124,6 @@
                 </article>
             {% endfor %}
         </div>
-    </section>
-
-    <section id="contact" class="section contact-section">
-        <div>
-            <p class="eyebrow">Let’s build</p>
-            <h2>Contact</h2>
-            <p>
-                Want to talk about a project, a Django idea, or the site currently moving to the affiliate subdomain?
-            </p>
-        </div>
-
-        <a class="button primary" href="mailto:hello@matty-dev.com">hello@matty-dev.com</a>
     </section>
 </main>
 {% endblock %}

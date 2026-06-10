@@ -1,6 +1,13 @@
 from django.shortcuts import render
 
-from .selectors import get_projects, get_skill_groups, get_project_by_slug
+from .selectors import (
+    get_about,
+    get_profile_links,
+    get_project_by_slug,
+    get_projects,
+    get_services,
+    get_skill_groups,
+)
 
 
 def home(request):
@@ -8,7 +15,10 @@ def home(request):
         request,
         "portfolio/home.html",
         {
+            "about": get_about(),
+            "profile_links": get_profile_links(),
             "projects": get_projects(),
+            "services": get_services(),
             "skill_groups": get_skill_groups(),
         },
     )
@@ -21,5 +31,6 @@ def project_detail(request, slug):
         "portfolio/project_detail.html",
         {
             "project": project,
+            "profile_links": get_profile_links(),
         },
     )

@@ -14,6 +14,7 @@ class HomePageTests(TestCase):
 
         affiliate_site = Project.objects.create(
             title="Affiliate Site",
+            slug="affiliate-site",
             description="My affiliate website.",
             status="live",
             featured=True,
@@ -23,6 +24,7 @@ class HomePageTests(TestCase):
 
         portfolio_site = Project.objects.create(
             title="Portfolio Site",
+            slug="portfolio-site",
             description="My portfolio website.",
             status="in_progress",
             featured=True,
@@ -57,3 +59,11 @@ class HomePageTests(TestCase):
 
         self.assertIn("skill_groups", response.context)
         self.assertEqual(len(response.context["skill_groups"]), 3)
+
+    def test_project_detail_page_loads(self):
+        response = self.client.get(
+            reverse("portfolio:project_detail", kwargs={"slug": "portfolio-site"})
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Portfolio Site")

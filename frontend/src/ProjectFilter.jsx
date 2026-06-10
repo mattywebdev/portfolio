@@ -34,6 +34,12 @@ export default function ProjectFilter({ projects }) {
             <div className="project-grid">
                 {visibleProjects.map((project) => (
                     <article className="project-card" key={project.title}>
+                        {project.image_url && (
+                            <a className="project-card-image-link" href={project.detail_url} aria-label={`${project.title} case study`}>
+                                <img className="project-card-image" src={project.image_url} alt={`${project.title} screenshot`} />
+                            </a>
+                        )}
+
                         <div className="project-card-header">
                             <h3>{project.title}</h3>
                             <span>{project.status}</span>

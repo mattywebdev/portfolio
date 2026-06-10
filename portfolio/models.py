@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 
+
 class Technology(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
@@ -32,12 +33,21 @@ class Project(models.Model):
     image = models.ImageField(upload_to="projects/", blank=True)
     started_on = models.DateField(blank=True, null=True)
     completed_on = models.DateField(blank=True, null=True)
+    role = models.CharField(max_length=120, blank=True)
+    problem = models.TextField(blank=True)
+    solution = models.TextField(blank=True)
+    features = models.TextField(blank=True)
+    lessons_learned = models.TextField(blank=True)
+    future_improvements = models.TextField(blank=True)
 
     class Meta:
         ordering = ["display_order", "title"]
 
     def __str__(self):
         return self.title
-    
+
     def get_absolute_url(self):
+        if not self.slug:
+            return reverse("portfolio:home") + "#projects"
+
         return reverse("portfolio:project_detail", kwargs={"slug": self.slug})

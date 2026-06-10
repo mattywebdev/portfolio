@@ -13,13 +13,26 @@
         <a class="brand" href="{% url 'portfolio:home' %}">Matty Dev</a>
 
         <nav class="site-nav" aria-label="Main navigation">
+            <a href="{% url 'portfolio:home' %}#about">About</a>
             <a href="{% url 'portfolio:home' %}#projects">Projects</a>
-            <a href="{% url 'portfolio:home' %}#skills">Skills</a>
+            <a href="{% url 'portfolio:home' %}#services">Services</a>
             <a href="{% url 'portfolio:home' %}#contact">Contact</a>
+            <a href="{% url 'portfolio:home' %}#skills">Skills</a>
         </nav>
     </header>
 
     {% block content %}{% endblock %}
+    <footer class="site-footer">
+        <div>
+            <strong>Matty Dev</strong>
+            <p>Built with Django, React, and a little stubborn curiosity.</p>
+        </div>
+        <div class="footer-links">
+            <a href="https://github.com/mattywebdev" target="_blank" rel="noreferrer">GitHub</a>
+            <a href="https://www.linkedin.com/in/mateusz-obstawski-9a355ba0/" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a href="mailto:hello@matty-dev.com">Email</a>
+        </div>
+    </footer>
     {% block scripts %}{% endblock %}
 </body>
 </html>

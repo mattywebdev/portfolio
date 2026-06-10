@@ -1,4 +1,7 @@
-from .data import SKILL_GROUPS
+from django.templatetags.static import static
+from django.shortcuts import get_object_or_404
+
+from .data import ABOUT, PROFILE_LINKS, SERVICES, SKILL_GROUPS
 from .models import Project
 
 
@@ -10,6 +13,7 @@ def get_projects():
             "tech": [tech.name for tech in project.technologies.all()],
             "status": project.get_status_display(),
             "detail_url": project.get_absolute_url(),
+            "image_url": static(project.image.name) if project.image else "",
             "url": project.url,
             "source_url": project.source_url,
         }
@@ -20,5 +24,21 @@ def get_projects():
 def get_skill_groups():
     return SKILL_GROUPS
 
+
+def get_about():
+    return ABOUT
+
+
+def get_profile_links():
+    return PROFILE_LINKS
+
+
+def get_services():
+    return SERVICES
+
+
 def get_project_by_slug(slug):
-    return Project.objects.prefetch_related("technologies").get(slug=slug)
+    return get_object_or_404(
+        Project.objects.prefetch_related("technologies"),
+        slug=slug,
+    )

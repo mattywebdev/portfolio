@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}{{ project.title }} | Matty Dev{% endblock %}
 
@@ -31,6 +32,54 @@
                 <a class="button secondary" href="{{ project.source_url }}" target="_blank" rel="noreferrer">View code</a>
             {% endif %}
         </div>
+
+        {% if project.image %}
+            <img class="project-detail-image" src="{% static project.image.name %}" alt="{{ project.title }} screenshot">
+        {% endif %}
+    </section>
+
+    <section class="section case-study-grid">
+        {% if project.role %}
+            <article class="case-study-card">
+                <h2>Role</h2>
+                <p>{{ project.role }}</p>
+            </article>
+        {% endif %}
+
+        {% if project.problem %}
+            <article class="case-study-card">
+                <h2>Problem</h2>
+                <p>{{ project.problem }}</p>
+            </article>
+        {% endif %}
+
+        {% if project.solution %}
+            <article class="case-study-card">
+                <h2>Solution</h2>
+                <p>{{ project.solution }}</p>
+            </article>
+        {% endif %}
+
+        {% if project.features %}
+            <article class="case-study-card">
+                <h2>Key features</h2>
+                <p>{{ project.features|linebreaksbr }}</p>
+            </article>
+        {% endif %}
+
+        {% if project.lessons_learned %}
+            <article class="case-study-card">
+                <h2>What I learned</h2>
+                <p>{{ project.lessons_learned }}</p>
+            </article>
+        {% endif %}
+
+        {% if project.future_improvements %}
+            <article class="case-study-card">
+                <h2>Future improvements</h2>
+                <p>{{ project.future_improvements|linebreaksbr }}</p>
+            </article>
+        {% endif %}
     </section>
 </main>
 {% endblock %}

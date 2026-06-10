@@ -27,6 +27,11 @@ class Project(models.Model):
     source_url = models.URLField(blank=True)
     featured = models.BooleanField(default=True)
     display_order = models.PositiveIntegerField(default=0)
+    slug = models.SlugField(max_length=140, unique=True, blank=True, null=True)
+    summary = models.CharField(max_length=220, blank=True)
+    image = models.ImageField(upload_to="projects/", blank=True)
+    started_on = models.DateField(blank=True, null=True)
+    completed_on = models.DateField(blank=True, null=True)
 
     class Meta:
         ordering = ["display_order", "title"]

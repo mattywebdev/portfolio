@@ -13,5 +13,6 @@ class TechnologyAdmin(admin.ModelAdmin):
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ["title", "status", "featured", "display_order"]
     list_filter = ["status", "featured", "technologies"]
-    search_fields = ["title", "description"]
+    search_fields = ["title", "description", "summary"]
+    prepopulated_fields = {"slug": ["title"]}
     filter_horizontal = ["technologies"]

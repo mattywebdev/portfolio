@@ -22,10 +22,21 @@
             estimate, and build.
         </p>
         <div class="hero-actions">
-            <a class="button primary" href="mailto:hello@matty-dev.com?subject=Project%20enquiry%20for%20Matty%20Dev">Email the project details</a>
+            <a class="button primary" href="#project-enquiry-form">Start the form</a>
             <a class="button secondary" href="{% url 'portfolio:home' %}#projects">See related work</a>
         </div>
     </section>
+
+    {% if messages %}
+        <div class="message-stack toast-stack" aria-live="polite">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">
+                    <p>{{ message }}</p>
+                    <button class="toast-close" type="button" aria-label="Dismiss message">x</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 
     <section class="section planner-section">
         <div class="section-heading">
@@ -61,26 +72,121 @@
         </div>
     </section>
 
-    <section class="section estimate-preview-section">
+    <section id="project-enquiry-form" class="section enquiry-form-section">
         <div>
-            <p class="eyebrow">Coming next</p>
-            <h2>A guided estimate form</h2>
+            <p class="eyebrow">Phase 1</p>
+            <h2>Send the project shape</h2>
             <p>
-                The next upgrade will turn this into a proper multi-step Django form with
-                estimate ranges, timeframe guidance, email notifications, and Django admin
-                lead tracking.
+                This is the first working version of the planner. It saves the enquiry so I
+                can review the project type, scope, budget, timing, and contact details in one place.
             </p>
         </div>
 
-        <div class="estimate-preview">
-            <h3>Version 1 scope</h3>
-            <ul>
-                <li>Simple page at /start-project/</li>
-                <li>Clear project brief prompts</li>
-                <li>Email-based enquiry link</li>
-                <li>No database changes yet</li>
-            </ul>
-        </div>
+        <form class="project-enquiry-form" method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="form-grid">
+                <div class="form-field">
+                    {{ form.project_type.label_tag }}
+                    {{ form.project_type }}
+                    {{ form.project_type.errors }}
+                </div>
+                <div class="form-field">
+                    {{ form.pages_needed.label_tag }}
+                    {{ form.pages_needed }}
+                    {{ form.pages_needed.errors }}
+                </div>
+                <div class="form-field">
+                    {{ form.budget_range.label_tag }}
+                    {{ form.budget_range }}
+                    {{ form.budget_range.errors }}
+                </div>
+                <div class="form-field">
+                    {{ form.timeframe.label_tag }}
+                    {{ form.timeframe }}
+                    {{ form.timeframe.errors }}
+                </div>
+            </div>
+
+            <div class="form-field checkbox-fieldset">
+                <span class="field-label">{{ form.features.label }}</span>
+                {{ form.features }}
+                {{ form.features.errors }}
+            </div>
+
+            <div class="form-field checkbox-fieldset">
+                <span class="field-label">{{ form.content_status.label }}</span>
+                {{ form.content_status }}
+                {{ form.content_status.errors }}
+            </div>
+
+            <div class="form-grid">
+                <div class="form-field">
+                    {{ form.client_name.label_tag }}
+                    {{ form.client_name }}
+                    {{ form.client_name.errors }}
+                </div>
+                <div class="form-field">
+                    {{ form.business_name.label_tag }}
+                    {{ form.business_name }}
+                    {{ form.business_name.errors }}
+                </div>
+                <div class="form-field">
+                    {{ form.email.label_tag }}
+                    {{ form.email }}
+                    {{ form.email.errors }}
+                </div>
+                <div class="form-field">
+                    {{ form.phone.label_tag }}
+                    {{ form.phone }}
+                    {{ form.phone.errors }}
+                </div>
+            </div>
+
+            <div class="form-field">
+                {{ form.current_website.label_tag }}
+                {{ form.current_website }}
+                {{ form.current_website.errors }}
+            </div>
+
+            <div class="form-field">
+                {{ form.message.label_tag }}
+                {{ form.message }}
+                {{ form.message.errors }}
+            </div>
+
+            <p class="privacy-note">
+                Your details will only be used to review your enquiry and reply about the project.
+                This is not a final quote.
+            </p>
+
+            <button class="button primary" type="submit">Send enquiry</button>
+        </form>
+
+        <aside class="next-phase-note">
+            <p class="eyebrow">Next phase</p>
+            <h3>Estimate preview and follow-up flow</h3>
+            <p>
+                The next version will add a rough starting estimate, suggested timeframe,
+                email notifications, and a cleaner confirmation step after submission.
+            </p>
+        </aside>
     </section>
 </main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.querySelectorAll(".toast-close").forEach((button) => {
+        button.addEventListener("click", () => {
+            button.closest(".message").classList.add("toast-dismissed");
+        });
+    });
+</script>
 {% endblock %}

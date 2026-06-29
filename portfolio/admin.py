@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Project, Technology
+from .models import Project, ProjectEnquiry, Technology
 
 
 @admin.register(Technology)
@@ -54,6 +54,61 @@ class ProjectAdmin(admin.ModelAdmin):
                     "features",
                     "lessons_learned",
                     "future_improvements",
+                ]
+            },
+        ),
+    ]
+
+
+@admin.register(ProjectEnquiry)
+class ProjectEnquiryAdmin(admin.ModelAdmin):
+    list_display = [
+        "client_name",
+        "business_name",
+        "project_type",
+        "budget_range",
+        "timeframe",
+        "status",
+        "created_at",
+    ]
+    list_filter = ["status", "project_type", "budget_range", "timeframe", "created_at"]
+    search_fields = ["client_name", "business_name", "email", "current_website", "message"]
+    readonly_fields = ["created_at", "updated_at"]
+    fieldsets = [
+        (
+            "Project",
+            {
+                "fields": [
+                    "project_type",
+                    "pages_needed",
+                    "features",
+                    "content_status",
+                    "budget_range",
+                    "timeframe",
+                ]
+            },
+        ),
+        (
+            "Contact",
+            {
+                "fields": [
+                    "client_name",
+                    "business_name",
+                    "email",
+                    "phone",
+                    "current_website",
+                    "message",
+                ]
+            },
+        ),
+        (
+            "Workflow",
+            {
+                "fields": [
+                    "status",
+                    "internal_notes",
+                    "created_at",
+                    "updated_at",
                 ]
             },
         ),

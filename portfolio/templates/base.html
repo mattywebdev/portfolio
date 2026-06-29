@@ -30,7 +30,12 @@
 
     {% block extra_head %}{% endblock %}
 
+    <link rel="icon" href="{% static 'portfolio/images/favicon.ico' %}" sizes="any">
     <link rel="icon" type="image/svg+xml" href="{% static 'portfolio/images/favicon.svg' %}">
+    <link rel="icon" type="image/png" sizes="48x48" href="{% static 'portfolio/images/favicon-48x48.png' %}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'portfolio/images/favicon-192x192.png' %}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{% static 'portfolio/images/favicon-512x512.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'portfolio/images/apple-touch-icon.png' %}">
     <link rel="stylesheet" href="{% static 'portfolio/css/styles.css' %}">
 </head>
 <body>

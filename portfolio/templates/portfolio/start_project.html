@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Start a Website Project | Matty Dev | Crewe Web Developer{% endblock %}
+
+{% block meta_description %}Start a website project with Matty Dev, a Crewe-based Django web developer building small business websites, forms, admin-managed pages, and practical web apps.{% endblock %}
+{% block canonical_url %}https://matty-dev.com/start-project/{% endblock %}
+
+{% block og_title %}Start a Website Project | Matty Dev{% endblock %}
+{% block og_description %}Plan a small business website, redesign, Django build, form, or practical web app with Matty Dev in Crewe.{% endblock %}
+{% block og_url %}https://matty-dev.com/start-project/{% endblock %}
+{% block twitter_title %}Start a Website Project | Matty Dev{% endblock %}
+{% block twitter_description %}Plan a small business website, redesign, Django build, form, or practical web app with Matty Dev in Crewe.{% endblock %}
+
+{% block content %}
+<main class="page start-project-page">
+    <section class="start-project-hero">
+        <p class="eyebrow">Project planner</p>
+        <h1>Start with a clear shape for your website or web app.</h1>
+        <p class="hero-copy">
+            This page is the first version of a guided project planner. For now, it helps
+            you see the kind of details I need before turning an idea into a realistic plan,
+            estimate, and build.
+        </p>
+        <div class="hero-actions">
+            <a class="button primary" href="mailto:hello@matty-dev.com?subject=Project%20enquiry%20for%20Matty%20Dev">Email the project details</a>
+            <a class="button secondary" href="{% url 'portfolio:home' %}#projects">See related work</a>
+        </div>
+    </section>
+
+    <section class="section planner-section">
+        <div class="section-heading">
+            <p class="eyebrow">What I need</p>
+            <h2>A useful first message</h2>
+            <p>
+                You do not need a perfect brief. A few honest details are enough to work out
+                the next sensible step.
+            </p>
+        </div>
+
+        <div class="planner-grid">
+            <article class="planner-card">
+                <span>01</span>
+                <h3>Project type</h3>
+                <p>New website, redesign, landing page, portfolio, booking form, catalogue, or custom Django app.</p>
+            </article>
+            <article class="planner-card">
+                <span>02</span>
+                <h3>Size and features</h3>
+                <p>Rough page count, forms, admin editing, blog, gallery, products, payments, SEO, or hosting help.</p>
+            </article>
+            <article class="planner-card">
+                <span>03</span>
+                <h3>Content readiness</h3>
+                <p>Logo, text, photos, domain, current website link, brand notes, and anything that still needs help.</p>
+            </article>
+            <article class="planner-card">
+                <span>04</span>
+                <h3>Budget and timing</h3>
+                <p>A rough budget range and whether the project is urgent, flexible, or still being explored.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="section estimate-preview-section">
+        <div>
+            <p class="eyebrow">Coming next</p>
+            <h2>A guided estimate form</h2>
+            <p>
+                The next upgrade will turn this into a proper multi-step Django form with
+                estimate ranges, timeframe guidance, email notifications, and Django admin
+                lead tracking.
+            </p>
+        </div>
+
+        <div class="estimate-preview">
+            <h3>Version 1 scope</h3>
+            <ul>
+                <li>Simple page at /start-project/</li>
+                <li>Clear project brief prompts</li>
+                <li>Email-based enquiry link</li>
+                <li>No database changes yet</li>
+            </ul>
+        </div>
+    </section>
+</main>
+{% endblock %}

@@ -23,6 +23,17 @@ def home(request):
         },
     )
 
+
+def start_project(request):
+    return render(
+        request,
+        "portfolio/start_project.html",
+        {
+            "profile_links": get_profile_links(),
+        },
+    )
+
+
 def project_detail(request, slug):
     project = get_project_by_slug(slug)
 

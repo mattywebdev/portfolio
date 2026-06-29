@@ -1,7 +1,16 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Matty Dev | Portfolio{% endblock %}
+{% block title %}Matty Dev | Website Designer in Crewe | Django Web Developer{% endblock %}
+{% block meta_description %}Matty Dev is a Crewe-based website designer and Django web developer building clean, mobile-friendly websites, admin-managed sites, forms, and custom web apps for small businesses in Cheshire and the North West.{% endblock %}
+{% block og_title %}Matty Dev | Website Designer in Crewe | Django Web Developer{% endblock %}
+{% block og_description %}Crewe-based website design and Django web development for small businesses, portfolios, admin-managed websites, forms, and practical web apps.{% endblock %}
+{% block twitter_title %}Matty Dev | Website Designer in Crewe | Django Web Developer{% endblock %}
+{% block twitter_description %}Crewe-based website design and Django web development for small businesses, portfolios, admin-managed websites, forms, and practical web apps.{% endblock %}
+
+{% block extra_head %}
+    {% include "portfolio/includes/home_structured_data.html" %}
+{% endblock %}
 
 {% block content %}
 <main class="page">
@@ -14,7 +23,7 @@
         </p>
         <div class="hero-actions">
             <a class="button primary" href="#projects">View my work</a>
-            <a class="button secondary" href="#contact">Work with me</a>
+            <a class="button secondary" href="{% url 'portfolio:start_project' %}">Start a project</a>
         </div>
 
         <ul class="proof-strip" aria-label="Key capabilities">
@@ -77,6 +86,36 @@
                 <span>{{ step }}</span>
             {% endfor %}
         </div>
+
+        <div class="service-cta">
+            <div>
+                <p class="eyebrow">Project idea?</p>
+                <h3>Turn a rough brief into practical next steps.</h3>
+            </div>
+            <a class="button primary" href="{% url 'portfolio:start_project' %}">Plan a project</a>
+        </div>
+    </section>
+
+    <section class="section local-seo-section">
+        <div class="section-heading">
+            <p class="eyebrow">Crewe and Cheshire</p>
+            <h2>Website design and Django web development in Crewe.</h2>
+            <p>
+                I build clean, mobile-friendly websites, contact forms, booking-style
+                enquiry flows, admin-managed pages, and custom Django applications for
+                small businesses across Crewe, Nantwich, Sandbach, Congleton, Cheshire,
+                and the North West.
+            </p>
+        </div>
+
+        <div class="local-service-list" aria-label="Local website services">
+            <span>Small business websites</span>
+            <span>Website redesigns</span>
+            <span>Django admin tools</span>
+            <span>Contact and enquiry forms</span>
+            <span>Mobile-friendly pages</span>
+            <span>Launch and hosting help</span>
+        </div>
     </section>
 
     <section id="contact" class="section contact-section">
@@ -103,6 +142,7 @@
                 Tell me what you need, what stage it’s at, and any links that would help me
                 understand the project or role.
             </p>
+            <a class="text-link contact-planner-link" href="{% url 'portfolio:start_project' %}">Use the project planner</a>
         </div>
     </section>
 

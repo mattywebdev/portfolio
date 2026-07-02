@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import Project, Technology
+from .models import Project, ProjectEnquiry, Technology
 
 
 class HomePageTests(TestCase):
@@ -67,3 +67,54 @@ class HomePageTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Portfolio Site")
+
+
+class StartProjectPageTests(TestCase):
+    def test_start_project_page_loads(self):
+        response = self.client.get(reverse("portfolio:start_project"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "portfolio/start_project.html")
+        self.assertContains(response, "Send the project shape")
+
+    def test_valid_project_enquiry_submission_creates_enquiry(self):
+        response = self.client.post(
+            reverse("portfolio:start_project"),
+            {
+                "project_type": "new_business_website",
+                "pages_needed": "two_four",
+                "features": ["contact_form", "basic_seo"],
+                "content_status": ["logo_ready", "text_ready"],
+                "budget_range": "500_1000",
+                "timeframe": "two_four_weeks",
+                "client_name": "Rafaello",
+                "business_name": "Ronaldo",
+                "email": "test@example.com",
+                "phone": "00000000000",
+                "current_website": "https://example.com",
+                "message": "I need a clean business website.",
+            },
+        )
+
+        self.assertRedirects(response, reverse("portfolio:start_project"))
+        self.assertEqual(ProjectEnquiry.objects.count(), 1)
+
+        enquiry = ProjectEnquiry.objects.get()
+        self.assertEqual(enquiry.client_name, "Rafaello")
+        self.assertEqual(enquiry.business_name, "Ronaldo")
+        self.assertEqual(enquiry.features, ["contact_form", "basic_seo"])
+        self.assertEqual(enquiry.content_status, ["logo_ready", "text_ready"])
+
+    def test_invalid_project_enquiry_submission_does_not_create_enquiry(self):
+        response = self.client.post(
+            reverse("portfolio:start_project"),
+            {
+                "project_type": "new_business_website",
+                "pages_needed": "two_four",
+                "email": "not-an-email",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(ProjectEnquiry.objects.count(), 0)
+        self.assertContains(response, "Enter a valid email address.")

@@ -899,7 +899,22 @@ h1 {
     border-color: var(--accent);
 }
 
+.form-field .client-field-error {
+    border-color: #f04438;
+    background: #fff8f7;
+}
+
+.form-field .client-field-error:focus {
+    outline-color: rgba(240, 68, 56, 0.2);
+    border-color: #f04438;
+}
+
+.has-client-error label {
+    color: #b42318;
+}
+
 .form-error-summary {
+    scroll-margin-top: 24px;
     padding: 16px;
     border: 1px solid #fda29b;
     border-radius: 8px;

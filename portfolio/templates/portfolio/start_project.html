@@ -85,8 +85,13 @@
         <form class="project-enquiry-form" method="post" novalidate>
             {% csrf_token %}
 
+            <div id="project-enquiry-client-feedback" class="form-errors form-error-summary" role="alert" tabindex="-1" hidden>
+                <h3>Some details need a quick check</h3>
+                <p>Please add the required details before sending the enquiry.</p>
+            </div>
+
             {% if form.errors %}
-                <div class="form-errors form-error-summary" role="alert">
+                <div id="project-enquiry-feedback" class="form-errors form-error-summary" role="alert" tabindex="-1">
                     <h3>Some details need a quick check</h3>
                     <p>Please review the highlighted fields below, especially your name, email, project type, and page count.</p>
                 </div>
@@ -328,6 +333,69 @@
                 messageField.focus();
             });
         });
+
+        const clientErrorSummary = enquiryForm.querySelector("#project-enquiry-client-feedback");
+        const requiredFields = [
+            enquiryForm.querySelector("#id_project_type"),
+            enquiryForm.querySelector("#id_pages_needed"),
+            enquiryForm.querySelector("#id_client_name"),
+            enquiryForm.querySelector("#id_email"),
+        ].filter(Boolean);
+
+        const setFieldErrorState = (field, hasError) => {
+            field.classList.toggle("client-field-error", hasError);
+            field.closest(".form-field").classList.toggle("has-client-error", hasError);
+        };
+
+        requiredFields.forEach((field) => {
+            field.addEventListener("input", () => {
+                setFieldErrorState(field, !field.validity.valid);
+            });
+            field.addEventListener("change", () => {
+                setFieldErrorState(field, !field.validity.valid);
+            });
+        });
+
+        enquiryForm.addEventListener("submit", (event) => {
+            let firstInvalidField = null;
+
+            requiredFields.forEach((field) => {
+                const isInvalid = !field.validity.valid;
+                setFieldErrorState(field, isInvalid);
+
+                if (isInvalid && !firstInvalidField) {
+                    firstInvalidField = field;
+                }
+            });
+
+            if (!firstInvalidField) {
+                return;
+            }
+
+            event.preventDefault();
+            clientErrorSummary.hidden = false;
+            clientErrorSummary.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+
+            window.setTimeout(() => {
+                clientErrorSummary.focus({ preventScroll: true });
+                firstInvalidField.focus({ preventScroll: true });
+            }, 300);
+        });
+
+        const errorSummary = enquiryForm.querySelector("#project-enquiry-feedback");
+
+        if (errorSummary) {
+            window.setTimeout(() => {
+                errorSummary.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                });
+                errorSummary.focus({ preventScroll: true });
+            }, 120);
+        }
     }
 </script>
 {% endblock %}

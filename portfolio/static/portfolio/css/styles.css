@@ -961,6 +961,32 @@ h1 {
     max-width: none;
 }
 
+.next-step-list {
+    display: grid;
+    gap: 10px;
+    margin: 16px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.next-step-list li {
+    position: relative;
+    padding-left: 22px;
+    color: var(--muted);
+    line-height: 1.55;
+}
+
+.next-step-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--accent);
+}
+
 .site-footer {
     width: min(1120px, calc(100% - 32px));
     margin: 0 auto;

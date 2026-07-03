@@ -74,11 +74,11 @@
 
     <section id="project-enquiry-form" class="section enquiry-form-section">
         <div>
-            <p class="eyebrow">Phase 1</p>
+            <p class="eyebrow">Phase 3</p>
             <h2>Send the project shape</h2>
             <p>
-                This is the first working version of the planner. It saves the enquiry so I
-                can review the project type, scope, budget, timing, and contact details in one place.
+                A guided version of the planner. Share the basics first, then add the
+                details you already know. Anything uncertain can stay rough.
             </p>
         </div>
 
@@ -91,75 +91,127 @@
                 </div>
             {% endif %}
 
-            <div class="form-grid">
-                <div class="form-field">
-                    {{ form.project_type.label_tag }}
-                    {{ form.project_type }}
-                    {{ form.project_type.errors }}
+            <section class="form-section-block">
+                <div class="form-section-heading">
+                    <span>01</span>
+                    <div>
+                        <h3>Project basics</h3>
+                        <p>Start with the type, rough size, budget, and timing. Estimates work better with honest ranges than perfect guesses.</p>
+                    </div>
                 </div>
-                <div class="form-field">
-                    {{ form.pages_needed.label_tag }}
-                    {{ form.pages_needed }}
-                    {{ form.pages_needed.errors }}
-                </div>
-                <div class="form-field">
-                    {{ form.budget_range.label_tag }}
-                    {{ form.budget_range }}
-                    {{ form.budget_range.errors }}
-                </div>
-                <div class="form-field">
-                    {{ form.timeframe.label_tag }}
-                    {{ form.timeframe }}
-                    {{ form.timeframe.errors }}
-                </div>
-            </div>
 
-            <div class="form-field checkbox-fieldset">
-                <span class="field-label">{{ form.features.label }}</span>
-                {{ form.features }}
-                {{ form.features.errors }}
-            </div>
-
-            <div class="form-field checkbox-fieldset">
-                <span class="field-label">{{ form.content_status.label }}</span>
-                {{ form.content_status }}
-                {{ form.content_status.errors }}
-            </div>
-
-            <div class="form-grid">
-                <div class="form-field">
-                    {{ form.client_name.label_tag }}
-                    {{ form.client_name }}
-                    {{ form.client_name.errors }}
+                <div class="form-grid">
+                    <div class="form-field">
+                        {{ form.project_type.label_tag }}
+                        <p class="field-help">Required. Pick the closest match.</p>
+                        {{ form.project_type }}
+                        {{ form.project_type.errors }}
+                    </div>
+                    <div class="form-field">
+                        {{ form.pages_needed.label_tag }}
+                        <p class="field-help">Required. A rough page count is enough.</p>
+                        {{ form.pages_needed }}
+                        {{ form.pages_needed.errors }}
+                    </div>
+                    <div class="form-field">
+                        {{ form.budget_range.label_tag }}
+                        <p class="field-help">Optional, but useful for choosing a sensible scope.</p>
+                        {{ form.budget_range }}
+                        {{ form.budget_range.errors }}
+                    </div>
+                    <div class="form-field">
+                        {{ form.timeframe.label_tag }}
+                        <p class="field-help">Optional. Tell me if there is a real deadline.</p>
+                        {{ form.timeframe }}
+                        {{ form.timeframe.errors }}
+                    </div>
                 </div>
-                <div class="form-field">
-                    {{ form.business_name.label_tag }}
-                    {{ form.business_name }}
-                    {{ form.business_name.errors }}
-                </div>
-                <div class="form-field">
-                    {{ form.email.label_tag }}
-                    {{ form.email }}
-                    {{ form.email.errors }}
-                </div>
-                <div class="form-field">
-                    {{ form.phone.label_tag }}
-                    {{ form.phone }}
-                    {{ form.phone.errors }}
-                </div>
-            </div>
+            </section>
 
-            <div class="form-field">
-                {{ form.current_website.label_tag }}
-                {{ form.current_website }}
-                {{ form.current_website.errors }}
-            </div>
+            <section class="form-section-block">
+                <div class="form-section-heading">
+                    <span>02</span>
+                    <div>
+                        <h3>Features and content</h3>
+                        <p>Tick anything you already know you need. Leaving boxes blank is fine if the project is still taking shape.</p>
+                    </div>
+                </div>
 
-            <div class="form-field">
-                {{ form.message.label_tag }}
-                {{ form.message }}
-                {{ form.message.errors }}
-            </div>
+                <div class="form-field checkbox-fieldset">
+                    <span class="field-label">{{ form.features.label }}</span>
+                    <p class="field-help">Optional. Choose every feature that sounds relevant.</p>
+                    {{ form.features }}
+                    {{ form.features.errors }}
+                </div>
+
+                <div class="form-field checkbox-fieldset">
+                    <span class="field-label">{{ form.content_status.label }}</span>
+                    <p class="field-help">Optional. This helps me understand what is ready and what still needs support.</p>
+                    {{ form.content_status }}
+                    {{ form.content_status.errors }}
+                </div>
+            </section>
+
+            <section class="form-section-block">
+                <div class="form-section-heading">
+                    <span>03</span>
+                    <div>
+                        <h3>Contact details</h3>
+                        <p>I need your name and email to reply. Everything else helps with context.</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-field">
+                        {{ form.client_name.label_tag }}
+                        <p class="field-help">Required. Your name or the best contact name.</p>
+                        {{ form.client_name }}
+                        {{ form.client_name.errors }}
+                    </div>
+                    <div class="form-field">
+                        {{ form.business_name.label_tag }}
+                        <p class="field-help">Optional. Leave blank if this is personal.</p>
+                        {{ form.business_name }}
+                        {{ form.business_name.errors }}
+                    </div>
+                    <div class="form-field">
+                        {{ form.email.label_tag }}
+                        <p class="field-help">Required. This is where I will reply.</p>
+                        {{ form.email }}
+                        {{ form.email.errors }}
+                    </div>
+                    <div class="form-field">
+                        {{ form.phone.label_tag }}
+                        <p class="field-help">Optional. Useful if a quick call would help.</p>
+                        {{ form.phone }}
+                        {{ form.phone.errors }}
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section-block">
+                <div class="form-section-heading">
+                    <span>04</span>
+                    <div>
+                        <h3>Useful context</h3>
+                        <p>Share the current website, the problem you want solved, or the result you want from the build.</p>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    {{ form.current_website.label_tag }}
+                    <p class="field-help">Optional. Add a link if there is an existing site or reference.</p>
+                    {{ form.current_website }}
+                    {{ form.current_website.errors }}
+                </div>
+
+                <div class="form-field">
+                    {{ form.message.label_tag }}
+                    <p class="field-help">Optional. A few sentences are enough. You can be messy here.</p>
+                    {{ form.message }}
+                    {{ form.message.errors }}
+                </div>
+            </section>
 
             <p class="privacy-note">
                 Your details will only be used to review your enquiry and reply about the project.

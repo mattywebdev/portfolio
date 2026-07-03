@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
@@ -87,8 +88,8 @@ class StartProjectPageTests(TestCase):
                 "content_status": ["logo_ready", "text_ready"],
                 "budget_range": "500_1000",
                 "timeframe": "two_four_weeks",
-                "client_name": "Rafaello",
-                "business_name": "Ronaldo",
+                "client_name": "Test Client",
+                "business_name": "Test Business",
                 "email": "test@example.com",
                 "phone": "00000000000",
                 "current_website": "https://example.com",
@@ -100,8 +101,8 @@ class StartProjectPageTests(TestCase):
         self.assertEqual(ProjectEnquiry.objects.count(), 1)
 
         enquiry = ProjectEnquiry.objects.get()
-        self.assertEqual(enquiry.client_name, "Rafaello")
-        self.assertEqual(enquiry.business_name, "Ronaldo")
+        self.assertEqual(enquiry.client_name, "Test Client")
+        self.assertEqual(enquiry.business_name, "Test Business")
         self.assertEqual(enquiry.features, ["contact_form", "basic_seo"])
         self.assertEqual(enquiry.content_status, ["logo_ready", "text_ready"])
 
@@ -118,3 +119,112 @@ class StartProjectPageTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(ProjectEnquiry.objects.count(), 0)
         self.assertContains(response, "Enter a valid email address.")
+
+
+class ProjectEnquiryAdminTests(TestCase):
+    def setUp(self):
+        user_model = get_user_model()
+        self.admin_user = user_model.objects.create_superuser(
+            username="admin",
+            email="admin@example.com",
+            password="password",
+        )
+        self.client.force_login(self.admin_user)
+
+    def test_project_enquiry_admin_list_loads(self):
+        ProjectEnquiry.objects.create(
+            project_type="new_business_website",
+            pages_needed="two_four",
+            features=["contact_form", "basic_seo"],
+            content_status=["logo_ready"],
+            budget_range="500_1000",
+            timeframe="two_four_weeks",
+            client_name="Test Client",
+            business_name="Test Business",
+            email="test@example.com",
+        )
+
+        response = self.client.get(reverse("admin:portfolio_projectenquiry_changelist"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Contact form, Basic SEO setup")
+        self.assertContains(response, "background:#e0f2fe")
+        self.assertContains(response, "color:#075985")
+        self.assertContains(response, ">New</span>")
+        self.assertContains(response, "Review")
+        self.assertContains(response, "Spam")
+        self.assertNotContains(response, "Win")
+
+    def test_project_enquiry_quick_status_endpoint_updates_status(self):
+        enquiry = ProjectEnquiry.objects.create(
+            project_type="new_business_website",
+            pages_needed="two_four",
+            features=["contact_form"],
+            content_status=["logo_ready"],
+            budget_range="500_1000",
+            timeframe="two_four_weeks",
+            client_name="Test Client",
+            business_name="Test Business",
+            email="test@example.com",
+        )
+
+        response = self.client.post(
+            reverse(
+                "admin:portfolio_projectenquiry_set_status",
+                args=[enquiry.pk, "reviewing"],
+            ),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+
+        enquiry.refresh_from_db()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["status"], "reviewing")
+        self.assertIn("Reviewing", response.json()["status_badge_html"])
+        self.assertIn("Contact", response.json()["status_actions_html"])
+        self.assertNotIn("Review", response.json()["status_actions_html"])
+        self.assertEqual(enquiry.status, "reviewing")
+
+    def test_project_enquiry_admin_list_shows_reopen_action_for_final_status(self):
+        ProjectEnquiry.objects.create(
+            project_type="new_business_website",
+            pages_needed="two_four",
+            features=["contact_form"],
+            content_status=["logo_ready"],
+            budget_range="500_1000",
+            timeframe="two_four_weeks",
+            client_name="Won Client",
+            business_name="Won Business",
+            email="won@example.com",
+            status="won",
+        )
+
+        response = self.client.get(reverse("admin:portfolio_projectenquiry_changelist"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, ">Won</span>")
+        self.assertContains(response, ">Reopen</a>")
+        self.assertContains(response, 'data-status="reviewing"')
+        self.assertNotContains(response, 'data-status="won"')
+        self.assertNotContains(response, 'data-status="spam"')
+
+    def test_project_enquiry_admin_change_page_loads(self):
+        enquiry = ProjectEnquiry.objects.create(
+            project_type="new_business_website",
+            pages_needed="two_four",
+            features=["contact_form"],
+            content_status=["logo_ready"],
+            budget_range="500_1000",
+            timeframe="two_four_weeks",
+            client_name="Detail Client",
+            business_name="Detail Business",
+            email="detail@example.com",
+        )
+
+        response = self.client.get(
+            reverse("admin:portfolio_projectenquiry_change", args=[enquiry.pk])
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Status:")
+        self.assertContains(response, ">New</span>")

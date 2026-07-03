@@ -85,6 +85,13 @@
         <form class="project-enquiry-form" method="post" novalidate>
             {% csrf_token %}
 
+            {% if form.errors %}
+                <div class="form-errors form-error-summary" role="alert">
+                    <h3>Some details need a quick check</h3>
+                    <p>Please review the highlighted fields below, especially your name, email, project type, and page count.</p>
+                </div>
+            {% endif %}
+
             {% if form.non_field_errors %}
                 <div class="form-errors">
                     {{ form.non_field_errors }}
@@ -208,10 +215,21 @@
                 <div class="form-field">
                     {{ form.message.label_tag }}
                     <p class="field-help">Optional. A few sentences are enough. You can be messy here.</p>
+                    <div class="example-prompts" aria-label="Example project messages">
+                        <button type="button" data-message-example="I need a 4-page website for a local service business. I have a logo and some photos, but I need help shaping the text and contact form.">Local service website</button>
+                        <button type="button" data-message-example="I already have a website, but it feels dated. I want a cleaner mobile-friendly redesign with easier editing and better enquiry flow.">Website redesign</button>
+                        <button type="button" data-message-example="I am not fully sure what I need yet. I have an idea for a small web app and would like help turning it into a realistic first version.">Not sure yet</button>
+                    </div>
                     {{ form.message }}
                     {{ form.message.errors }}
                 </div>
             </section>
+
+            <aside class="form-summary-preview" aria-live="polite">
+                <p class="eyebrow">Preview</p>
+                <h3>Project shape</h3>
+                <p data-project-summary>Choose a project type, rough size, and a few useful details to see a quick summary here.</p>
+            </aside>
 
             <p class="privacy-note">
                 Your details will only be used to review your enquiry and reply about the project.
@@ -246,5 +264,70 @@
             button.closest(".message").classList.add("toast-dismissed");
         });
     });
+
+    const enquiryForm = document.querySelector(".project-enquiry-form");
+
+    if (enquiryForm) {
+        const summary = enquiryForm.querySelector("[data-project-summary]");
+        const messageField = enquiryForm.querySelector("#id_message");
+
+        const getSelectedText = (fieldName) => {
+            const field = enquiryForm.querySelector(`[name="${fieldName}"]`);
+
+            if (!field || field.selectedIndex < 0) {
+                return "";
+            }
+
+            return field.options[field.selectedIndex].text;
+        };
+
+        const getCheckedLabels = (fieldName) => {
+            return Array.from(enquiryForm.querySelectorAll(`[name="${fieldName}"]:checked`))
+                .map((input) => input.closest("label").textContent.trim());
+        };
+
+        const updateSummary = () => {
+            const projectType = getSelectedText("project_type");
+            const pagesNeeded = getSelectedText("pages_needed");
+            const budgetRange = getSelectedText("budget_range");
+            const timeframe = getSelectedText("timeframe");
+            const features = getCheckedLabels("features");
+            const content = getCheckedLabels("content_status");
+
+            if (!projectType || projectType === "---------") {
+                summary.textContent = "Choose a project type, rough size, and a few useful details to see a quick summary here.";
+                return;
+            }
+
+            const parts = [
+                `This looks like ${projectType.toLowerCase()}`,
+                pagesNeeded && pagesNeeded !== "---------" ? `with around ${pagesNeeded.toLowerCase()}` : "",
+                budgetRange && budgetRange !== "---------" ? `in the ${budgetRange} range` : "",
+                timeframe && timeframe !== "---------" ? `with a ${timeframe.toLowerCase()} timeframe` : "",
+            ].filter(Boolean);
+
+            const extra = [];
+
+            if (features.length) {
+                extra.push(`Features mentioned: ${features.slice(0, 3).join(", ")}${features.length > 3 ? ", and more" : ""}.`);
+            }
+
+            if (content.length) {
+                extra.push(`Content status: ${content.slice(0, 3).join(", ")}${content.length > 3 ? ", and more" : ""}.`);
+            }
+
+            summary.textContent = `${parts.join(" ")}. ${extra.join(" ")}`.trim();
+        };
+
+        enquiryForm.addEventListener("change", updateSummary);
+        updateSummary();
+
+        enquiryForm.querySelectorAll("[data-message-example]").forEach((button) => {
+            button.addEventListener("click", () => {
+                messageField.value = button.dataset.messageExample;
+                messageField.focus();
+            });
+        });
+    }
 </script>
 {% endblock %}

@@ -1,4 +1,3 @@
-from django.contrib import messages
 from django.shortcuts import redirect, render
 
 from .forms import ProjectEnquiryForm
@@ -31,11 +30,7 @@ def start_project(request):
         form = ProjectEnquiryForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(
-                request,
-                "Thanks - your project enquiry has been saved. I will review it and get back to you.",
-            )
-            return redirect("portfolio:start_project")
+            return redirect("portfolio:start_project_thanks")
     else:
         form = ProjectEnquiryForm()
 
@@ -44,6 +39,16 @@ def start_project(request):
         "portfolio/start_project.html",
         {
             "form": form,
+            "profile_links": get_profile_links(),
+        },
+    )
+
+
+def start_project_thanks(request):
+    return render(
+        request,
+        "portfolio/start_project_thanks.html",
+        {
             "profile_links": get_profile_links(),
         },
     )

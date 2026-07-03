@@ -14,5 +14,6 @@ urlpatterns = [
         name="favicon",
     ),
     path("start-project/", views.start_project, name="start_project"),
+    path("start-project/thanks/", views.start_project_thanks, name="start_project_thanks"),
     path("projects/<slug:slug>/", views.project_detail, name="project_detail")
 ]

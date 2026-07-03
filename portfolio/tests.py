@@ -77,6 +77,8 @@ class StartProjectPageTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "portfolio/start_project.html")
         self.assertContains(response, "Send the project shape")
+        self.assertContains(response, "Project shape")
+        self.assertContains(response, "Local service website")
 
     def test_valid_project_enquiry_submission_creates_enquiry(self):
         response = self.client.post(
@@ -97,7 +99,7 @@ class StartProjectPageTests(TestCase):
             },
         )
 
-        self.assertRedirects(response, reverse("portfolio:start_project"))
+        self.assertRedirects(response, reverse("portfolio:start_project_thanks"))
         self.assertEqual(ProjectEnquiry.objects.count(), 1)
 
         enquiry = ProjectEnquiry.objects.get()
@@ -118,7 +120,15 @@ class StartProjectPageTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(ProjectEnquiry.objects.count(), 0)
+        self.assertContains(response, "Some details need a quick check")
         self.assertContains(response, "Enter a valid email address.")
+
+    def test_start_project_thanks_page_loads(self):
+        response = self.client.get(reverse("portfolio:start_project_thanks"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "portfolio/start_project_thanks.html")
+        self.assertContains(response, "Your project enquiry has been saved.")
 
 
 class ProjectEnquiryAdminTests(TestCase):

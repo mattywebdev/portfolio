@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Project Enquiry Sent | Matty Dev{% endblock %}
+
+{% block meta_description %}Your project enquiry has been sent to Matty Dev. I will review the details and reply with the next sensible step.{% endblock %}
+{% block canonical_url %}https://matty-dev.com/start-project/thanks/{% endblock %}
+
+{% block og_title %}Project Enquiry Sent | Matty Dev{% endblock %}
+{% block og_description %}Thanks for sending your project shape. I will review the details and reply with the next sensible step.{% endblock %}
+{% block og_url %}https://matty-dev.com/start-project/thanks/{% endblock %}
+{% block twitter_title %}Project Enquiry Sent | Matty Dev{% endblock %}
+{% block twitter_description %}Thanks for sending your project shape. I will review the details and reply with the next sensible step.{% endblock %}
+
+{% block content %}
+<main class="page thanks-page">
+    <section class="thanks-panel">
+        <div class="thanks-confirmation">
+            <p class="eyebrow">Enquiry sent</p>
+            <h1>Your project enquiry has been saved.</h1>
+            <p>
+                Thanks for sending the details. I will review the scope, content, timing,
+                and contact information before replying with the next sensible step.
+            </p>
+            <div class="hero-actions">
+                <a class="button primary" href="{% url 'portfolio:home' %}#projects">View related work</a>
+                <a class="button secondary" href="{% url 'portfolio:start_project' %}">Send another enquiry</a>
+            </div>
+        </div>
+
+        <div class="thanks-next-steps">
+            <p class="eyebrow">What happens next</p>
+            <ul class="next-step-list">
+                <li>I check the project type, page count, features, and existing website context.</li>
+                <li>I look at what content is ready and where you might need help.</li>
+                <li>You get a practical reply, not an automatic quote generated from a form.</li>
+            </ul>
+        </div>
+    </section>
+</main>
+{% endblock %}

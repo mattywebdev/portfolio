@@ -69,6 +69,23 @@ class HomePageTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Portfolio Site")
 
+    def test_robots_txt_loads(self):
+        response = self.client.get(reverse("portfolio:robots_txt"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "text/plain")
+        self.assertContains(response, "User-agent: *")
+        self.assertContains(response, "Sitemap: https://matty-dev.com/sitemap.xml")
+
+    def test_sitemap_xml_loads(self):
+        response = self.client.get(reverse("portfolio:sitemap"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "application/xml")
+        self.assertContains(response, "https://matty-dev.com/")
+        self.assertContains(response, "https://matty-dev.com/start-project/")
+        self.assertContains(response, "https://matty-dev.com/projects/portfolio-site/")
+
 
 class StartProjectPageTests(TestCase):
     def test_start_project_page_loads(self):
@@ -129,6 +146,7 @@ class StartProjectPageTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "portfolio/start_project_thanks.html")
         self.assertContains(response, "Your project enquiry has been saved.")
+        self.assertContains(response, '<meta name="robots" content="noindex,follow">')
 
 
 class ProjectEnquiryAdminTests(TestCase):

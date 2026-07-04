@@ -8,6 +8,8 @@ app_name = "portfolio"
 
 urlpatterns = [
     path("", views.home, name="home"),
+    path("robots.txt", views.robots_txt, name="robots_txt"),
+    path("sitemap.xml", views.sitemap_xml, name="sitemap"),
     path(
         "favicon.ico",
         RedirectView.as_view(url=static("portfolio/images/favicon.ico"), permanent=True),

@@ -1,0 +1,26 @@
+New project enquiry from {{ enquiry.client_name }}
+
+Contact
+Name: {{ enquiry.client_name }}
+Business: {{ enquiry.business_name|default:"-" }}
+Email: {{ enquiry.email }}
+Phone: {{ enquiry.phone|default:"-" }}
+Current website: {{ enquiry.current_website|default:"-" }}
+
+Project
+Type: {{ enquiry.get_project_type_display }}
+Pages: {{ enquiry.get_pages_needed_display }}
+Budget: {{ enquiry.get_budget_range_display|default:"-" }}
+Timeframe: {{ enquiry.get_timeframe_display|default:"-" }}
+
+Features
+{{ feature_labels|default:"-" }}
+
+Content readiness
+{{ content_status_labels|default:"-" }}
+
+Message
+{{ enquiry.message|default:"-" }}
+
+Admin
+Review this enquiry in Django admin.

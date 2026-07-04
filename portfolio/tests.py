@@ -1,8 +1,16 @@
+from django.core import mail
+from django.core.mail.backends.base import BaseEmailBackend
 from django.contrib.auth import get_user_model
+from django.test import override_settings
 from django.test import TestCase
 from django.urls import reverse
 
 from .models import Project, ProjectEnquiry, Technology
+
+
+class FailingEmailBackend(BaseEmailBackend):
+    def send_messages(self, email_messages):
+        raise RuntimeError("Email backend failed")
 
 
 class HomePageTests(TestCase):
@@ -124,6 +132,58 @@ class StartProjectPageTests(TestCase):
         self.assertEqual(enquiry.business_name, "Test Business")
         self.assertEqual(enquiry.features, ["contact_form", "basic_seo"])
         self.assertEqual(enquiry.content_status, ["logo_ready", "text_ready"])
+
+    @override_settings(
+        EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+        DEFAULT_FROM_EMAIL="Matty Dev <hello@matty-dev.com>",
+        PROJECT_ENQUIRY_NOTIFICATION_EMAIL="hello@matty-dev.com",
+    )
+    def test_valid_project_enquiry_submission_sends_notification_email(self):
+        response = self.client.post(
+            reverse("portfolio:start_project"),
+            {
+                "project_type": "new_business_website",
+                "pages_needed": "two_four",
+                "features": ["contact_form", "basic_seo"],
+                "content_status": ["logo_ready", "text_ready"],
+                "budget_range": "500_1000",
+                "timeframe": "two_four_weeks",
+                "client_name": "Test Client",
+                "business_name": "Test Business",
+                "email": "test@example.com",
+                "phone": "00000000000",
+                "current_website": "https://example.com",
+                "message": "I need a clean business website.",
+            },
+        )
+
+        self.assertRedirects(response, reverse("portfolio:start_project_thanks"))
+        self.assertEqual(len(mail.outbox), 1)
+
+        notification = mail.outbox[0]
+        self.assertEqual(notification.to, ["hello@matty-dev.com"])
+        self.assertEqual(notification.reply_to, ["test@example.com"])
+        self.assertIn("New project enquiry from Test Client", notification.subject)
+        self.assertIn("Contact form, Basic SEO setup", notification.body)
+        self.assertIn("Logo ready, Text/content ready", notification.body)
+
+    @override_settings(
+        EMAIL_BACKEND="portfolio.tests.FailingEmailBackend",
+        PROJECT_ENQUIRY_NOTIFICATION_EMAIL="hello@matty-dev.com",
+    )
+    def test_project_enquiry_is_saved_when_notification_email_fails(self):
+        response = self.client.post(
+            reverse("portfolio:start_project"),
+            {
+                "project_type": "new_business_website",
+                "pages_needed": "two_four",
+                "client_name": "Test Client",
+                "email": "test@example.com",
+            },
+        )
+
+        self.assertRedirects(response, reverse("portfolio:start_project_thanks"))
+        self.assertEqual(ProjectEnquiry.objects.count(), 1)
 
     def test_invalid_project_enquiry_submission_does_not_create_enquiry(self):
         response = self.client.post(

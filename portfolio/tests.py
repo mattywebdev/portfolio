@@ -145,7 +145,7 @@ class StartProjectPageTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "portfolio/start_project_thanks.html")
-        self.assertContains(response, "Your project enquiry has been saved.")
+        self.assertContains(response, "Your project enquiry has been sent.")
         self.assertContains(response, '<meta name="robots" content="noindex,follow">')
 
 

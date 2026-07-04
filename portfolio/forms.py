@@ -33,12 +33,12 @@ CONTENT_STATUS_CHOICES = [
 class ProjectEnquiryForm(forms.ModelForm):
     features = forms.MultipleChoiceField(
         choices=FEATURE_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
+        widget=forms.CheckboxSelectMultiple(attrs={"aria-describedby": "features-help"}),
         required=False,
     )
     content_status = forms.MultipleChoiceField(
         choices=CONTENT_STATUS_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
+        widget=forms.CheckboxSelectMultiple(attrs={"aria-describedby": "content-status-help"}),
         required=False,
         label="Content readiness",
     )
@@ -60,5 +60,14 @@ class ProjectEnquiryForm(forms.ModelForm):
             "message",
         ]
         widgets = {
-            "message": forms.Textarea(attrs={"rows": 5}),
+            "project_type": forms.Select(attrs={"aria-describedby": "project-type-help"}),
+            "pages_needed": forms.Select(attrs={"aria-describedby": "pages-needed-help"}),
+            "budget_range": forms.Select(attrs={"aria-describedby": "budget-range-help"}),
+            "timeframe": forms.Select(attrs={"aria-describedby": "timeframe-help"}),
+            "client_name": forms.TextInput(attrs={"aria-describedby": "client-name-help"}),
+            "business_name": forms.TextInput(attrs={"aria-describedby": "business-name-help"}),
+            "email": forms.EmailInput(attrs={"aria-describedby": "email-help"}),
+            "phone": forms.TextInput(attrs={"aria-describedby": "phone-help"}),
+            "current_website": forms.URLInput(attrs={"aria-describedby": "current-website-help"}),
+            "message": forms.Textarea(attrs={"rows": 5, "aria-describedby": "message-help"}),
         }

@@ -17,9 +17,9 @@
         <p class="eyebrow">Project planner</p>
         <h1>Start with a clear shape for your website or web app.</h1>
         <p class="hero-copy">
-            This page is the first version of a guided project planner. For now, it helps
-            you see the kind of details I need before turning an idea into a realistic plan,
-            estimate, and build.
+            Use this guided planner to share the practical details behind the idea:
+            what you need, what is already ready, and what still needs shaping before
+            a realistic plan or estimate makes sense.
         </p>
         <div class="hero-actions">
             <a class="button primary" href="#project-enquiry-form">Start the form</a>
@@ -74,11 +74,11 @@
 
     <section id="project-enquiry-form" class="section enquiry-form-section">
         <div>
-            <p class="eyebrow">Phase 3</p>
+            <p class="eyebrow">Project details</p>
             <h2>Send the project shape</h2>
             <p>
-                A guided version of the planner. Share the basics first, then add the
-                details you already know. Anything uncertain can stay rough.
+                Share the basics first, then add the details you already know. Anything
+                uncertain can stay rough.
             </p>
         </div>
 
@@ -115,25 +115,25 @@
                 <div class="form-grid">
                     <div class="form-field">
                         {{ form.project_type.label_tag }}
-                        <p class="field-help">Required. Pick the closest match.</p>
+                        <p id="project-type-help" class="field-help">Required. Pick the closest match.</p>
                         {{ form.project_type }}
                         {{ form.project_type.errors }}
                     </div>
                     <div class="form-field">
                         {{ form.pages_needed.label_tag }}
-                        <p class="field-help">Required. A rough page count is enough.</p>
+                        <p id="pages-needed-help" class="field-help">Required. A rough page count is enough.</p>
                         {{ form.pages_needed }}
                         {{ form.pages_needed.errors }}
                     </div>
                     <div class="form-field">
                         {{ form.budget_range.label_tag }}
-                        <p class="field-help">Optional, but useful for choosing a sensible scope.</p>
+                        <p id="budget-range-help" class="field-help">Optional, but useful for choosing a sensible scope.</p>
                         {{ form.budget_range }}
                         {{ form.budget_range.errors }}
                     </div>
                     <div class="form-field">
                         {{ form.timeframe.label_tag }}
-                        <p class="field-help">Optional. Tell me if there is a real deadline.</p>
+                        <p id="timeframe-help" class="field-help">Optional. Tell me if there is a real deadline.</p>
                         {{ form.timeframe }}
                         {{ form.timeframe.errors }}
                     </div>
@@ -151,14 +151,14 @@
 
                 <div class="form-field checkbox-fieldset">
                     <span class="field-label">{{ form.features.label }}</span>
-                    <p class="field-help">Optional. Choose every feature that sounds relevant.</p>
+                    <p id="features-help" class="field-help">Optional. Choose every feature that sounds relevant.</p>
                     {{ form.features }}
                     {{ form.features.errors }}
                 </div>
 
                 <div class="form-field checkbox-fieldset">
                     <span class="field-label">{{ form.content_status.label }}</span>
-                    <p class="field-help">Optional. This helps me understand what is ready and what still needs support.</p>
+                    <p id="content-status-help" class="field-help">Optional. This helps me understand what is ready and what still needs support.</p>
                     {{ form.content_status }}
                     {{ form.content_status.errors }}
                 </div>
@@ -176,25 +176,25 @@
                 <div class="form-grid">
                     <div class="form-field">
                         {{ form.client_name.label_tag }}
-                        <p class="field-help">Required. Your name or the best contact name.</p>
+                        <p id="client-name-help" class="field-help">Required. Your name or the best contact name.</p>
                         {{ form.client_name }}
                         {{ form.client_name.errors }}
                     </div>
                     <div class="form-field">
                         {{ form.business_name.label_tag }}
-                        <p class="field-help">Optional. Leave blank if this is personal.</p>
+                        <p id="business-name-help" class="field-help">Optional. Leave blank if this is personal.</p>
                         {{ form.business_name }}
                         {{ form.business_name.errors }}
                     </div>
                     <div class="form-field">
                         {{ form.email.label_tag }}
-                        <p class="field-help">Required. This is where I will reply.</p>
+                        <p id="email-help" class="field-help">Required. This is where I will reply.</p>
                         {{ form.email }}
                         {{ form.email.errors }}
                     </div>
                     <div class="form-field">
                         {{ form.phone.label_tag }}
-                        <p class="field-help">Optional. Useful if a quick call would help.</p>
+                        <p id="phone-help" class="field-help">Optional. Useful if a quick call would help.</p>
                         {{ form.phone }}
                         {{ form.phone.errors }}
                     </div>
@@ -212,14 +212,14 @@
 
                 <div class="form-field">
                     {{ form.current_website.label_tag }}
-                    <p class="field-help">Optional. Add a link if there is an existing site or reference.</p>
+                    <p id="current-website-help" class="field-help">Optional. Add a link if there is an existing site or reference.</p>
                     {{ form.current_website }}
                     {{ form.current_website.errors }}
                 </div>
 
                 <div class="form-field">
                     {{ form.message.label_tag }}
-                    <p class="field-help">Optional. A few sentences are enough. You can be messy here.</p>
+                    <p id="message-help" class="field-help">Optional. A few sentences are enough. You can be messy here.</p>
                     <div class="example-prompts" aria-label="Example project messages">
                         <button type="button" data-message-example="I need a 4-page website for a local service business. I have a logo and some photos, but I need help shaping the text and contact form.">Local service website</button>
                         <button type="button" data-message-example="I already have a website, but it feels dated. I want a cleaner mobile-friendly redesign with easier editing and better enquiry flow.">Website redesign</button>

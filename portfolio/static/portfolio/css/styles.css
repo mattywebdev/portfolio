@@ -1276,3 +1276,79 @@ h1 {
         flex-direction: column;
     }
 }
+
+@media (max-width: 640px) {
+    .thanks-page {
+        min-height: auto;
+        align-content: start;
+    }
+
+    .thanks-panel {
+        grid-template-columns: 1fr;
+        gap: 28px;
+        padding: 44px 0 56px;
+    }
+
+    .thanks-confirmation {
+        min-width: 0;
+    }
+
+    .thanks-confirmation h1 {
+        max-width: none;
+        margin: 10px 0 16px;
+        font-size: clamp(3rem, 16vw, 4.1rem);
+        line-height: 0.98;
+    }
+
+    .thanks-confirmation p {
+        max-width: none;
+        font-size: 1rem;
+        line-height: 1.55;
+    }
+
+    .email-confirmation-note {
+        max-width: none;
+        margin-top: 22px;
+        padding: 16px;
+    }
+
+    .email-confirmation-note strong {
+        overflow-wrap: anywhere;
+        word-break: normal;
+    }
+
+    .thanks-next-steps {
+        padding: 18px;
+    }
+
+    .next-step-list {
+        gap: 14px;
+    }
+
+    .hero-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .hero-actions .button {
+        width: 100%;
+    }
+
+    .email-confirmation-toast {
+        top: 12px;
+        width: min(520px, calc(100% - 24px));
+        gap: 12px;
+        padding: 14px 14px 14px 16px;
+    }
+
+    .email-confirmation-toast p {
+        font-size: 0.96rem;
+        line-height: 1.4;
+    }
+
+    .email-confirmation-toast strong {
+        overflow-wrap: anywhere;
+        word-break: normal;
+    }
+}

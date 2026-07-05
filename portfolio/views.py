@@ -77,10 +77,12 @@ def send_project_enquiry_notification_with_smtp(enquiry, message):
 
 
 def send_project_enquiry_notification(enquiry):
+    admin_url = f"{SITE_URL}{reverse('admin:portfolio_projectenquiry_change', args=[enquiry.pk])}"
     message = render_to_string(
         "portfolio/emails/project_enquiry_notification.txt",
         {
             "enquiry": enquiry,
+            "admin_url": admin_url,
             "feature_labels": get_choice_labels(enquiry.features, FEATURE_CHOICES),
             "content_status_labels": get_choice_labels(
                 enquiry.content_status,

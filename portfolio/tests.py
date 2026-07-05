@@ -151,7 +151,7 @@ class StartProjectPageTests(TestCase):
                 "budget_range": "500_1000",
                 "timeframe": "two_four_weeks",
                 "client_name": "Test Client",
-                "business_name": "Test Business",
+                "business_name": "Test & Business",
                 "email": "test@example.com",
                 "phone": "00000000000",
                 "current_website": "https://example.com",
@@ -166,8 +166,12 @@ class StartProjectPageTests(TestCase):
         self.assertEqual(notification.to, ["hello@matty-dev.com"])
         self.assertEqual(notification.reply_to, ["test@example.com"])
         self.assertIn("New project enquiry from Test Client", notification.subject)
+        self.assertIn("Quick summary", notification.body)
+        self.assertIn("Business: Test & Business", notification.body)
+        self.assertNotIn("Test &amp; Business", notification.body)
         self.assertIn("Contact form, Basic SEO setup", notification.body)
         self.assertIn("Logo ready, Text/content ready", notification.body)
+        self.assertIn("/admin/portfolio/projectenquiry/", notification.body)
 
     @override_settings(
         EMAIL_BACKEND="portfolio.tests.FailingEmailBackend",
@@ -224,6 +228,7 @@ class StartProjectPageTests(TestCase):
         self.assertIn(b'"reply_to": "test@example.com"', resend_request.data)
         self.assertIn(b'"subject": "New project enquiry from Test Client"', resend_request.data)
         self.assertIn(b"Contact form", resend_request.data)
+        self.assertIn(b"Review this enquiry", resend_request.data)
 
     def test_invalid_project_enquiry_submission_does_not_create_enquiry(self):
         response = self.client.post(

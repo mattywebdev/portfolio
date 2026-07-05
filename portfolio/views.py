@@ -3,7 +3,7 @@ import json
 from urllib import request
 
 from django.conf import settings
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
@@ -34,7 +34,7 @@ def get_choice_labels(selected_values, choices):
     )
 
 
-def send_email_with_resend(subject, message, to_email, reply_to=None):
+def send_email_with_resend(subject, message, to_email, reply_to=None, html_message=None):
     if not settings.RESEND_API_KEY:
         raise RuntimeError("RESEND_API_KEY is not configured.")
 
@@ -45,6 +45,7 @@ def send_email_with_resend(subject, message, to_email, reply_to=None):
             "reply_to": reply_to or settings.PROJECT_ENQUIRY_NOTIFICATION_EMAIL,
             "subject": subject,
             "text": message,
+            "html": html_message,
         }
     ).encode("utf-8")
 
@@ -65,23 +66,39 @@ def send_email_with_resend(subject, message, to_email, reply_to=None):
             raise RuntimeError(f"Resend API returned status {response.status}.")
 
 
-def send_email_with_smtp(subject, message, to_email, reply_to=None):
-    email = EmailMessage(
+def send_email_with_smtp(subject, message, to_email, reply_to=None, html_message=None):
+    email = EmailMultiAlternatives(
         subject=subject,
         body=message,
         from_email=settings.DEFAULT_FROM_EMAIL,
         to=[to_email],
         reply_to=[reply_to or settings.PROJECT_ENQUIRY_NOTIFICATION_EMAIL],
     )
+
+    if html_message:
+        email.attach_alternative(html_message, "text/html")
+
     email.send(fail_silently=False)
 
 
-def send_project_email(subject, message, to_email, reply_to=None):
+def send_project_email(subject, message, to_email, reply_to=None, html_message=None):
     if settings.EMAIL_PROVIDER.lower() == "resend":
-        send_email_with_resend(subject, message, to_email, reply_to=reply_to)
+        send_email_with_resend(
+            subject,
+            message,
+            to_email,
+            reply_to=reply_to,
+            html_message=html_message,
+        )
         return
 
-    send_email_with_smtp(subject, message, to_email, reply_to=reply_to)
+    send_email_with_smtp(
+        subject,
+        message,
+        to_email,
+        reply_to=reply_to,
+        html_message=html_message,
+    )
 
 
 def send_project_enquiry_notification(enquiry):
@@ -98,12 +115,25 @@ def send_project_enquiry_notification(enquiry):
             ),
         },
     )
+    html_message = render_to_string(
+        "portfolio/emails/project_enquiry_notification.html",
+        {
+            "enquiry": enquiry,
+            "admin_url": admin_url,
+            "feature_labels": get_choice_labels(enquiry.features, FEATURE_CHOICES),
+            "content_status_labels": get_choice_labels(
+                enquiry.content_status,
+                CONTENT_STATUS_CHOICES,
+            ),
+        },
+    )
 
     send_project_email(
         subject=f"New project enquiry from {enquiry.client_name}",
         message=message,
         to_email=settings.PROJECT_ENQUIRY_NOTIFICATION_EMAIL,
         reply_to=enquiry.email,
+        html_message=html_message,
     )
 
 
@@ -119,12 +149,24 @@ def send_project_enquiry_confirmation(enquiry):
             ),
         },
     )
+    html_message = render_to_string(
+        "portfolio/emails/project_enquiry_confirmation.html",
+        {
+            "enquiry": enquiry,
+            "feature_labels": get_choice_labels(enquiry.features, FEATURE_CHOICES),
+            "content_status_labels": get_choice_labels(
+                enquiry.content_status,
+                CONTENT_STATUS_CHOICES,
+            ),
+        },
+    )
 
     send_project_email(
         subject="Your project enquiry was received",
         message=message,
         to_email=enquiry.email,
         reply_to=settings.PROJECT_ENQUIRY_NOTIFICATION_EMAIL,
+        html_message=html_message,
     )
 
 

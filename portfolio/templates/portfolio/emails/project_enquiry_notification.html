@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<body style="margin:0; padding:0; background:#f4f7f3; color:#101828; font-family:Arial, Helvetica, sans-serif;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f4f7f3; padding:28px 12px;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:680px; background:#ffffff; border:1px solid #d8e0da; border-radius:10px; overflow:hidden;">
+                    <tr>
+                        <td style="padding:28px 30px; background:#101828; color:#ffffff;">
+                            <div style="font-size:13px; font-weight:700; color:#9ee6dc; text-transform:uppercase; letter-spacing:0.04em;">Matty Dev lead</div>
+                            <h1 style="margin:10px 0 0; font-size:28px; line-height:1.2;">New enquiry from {{ enquiry.client_name }}</h1>
+                            <p style="margin:10px 0 0; color:#d0d5dd; line-height:1.6;">{{ enquiry.get_project_type_display }} enquiry received from the project planner.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:26px 30px;">
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td style="padding:14px; border:1px solid #d8e0da; border-radius:8px; background:#edf7f3;">
+                                        <div style="font-size:12px; color:#087568; font-weight:700; text-transform:uppercase;">Project</div>
+                                        <div style="margin-top:6px; font-size:18px; font-weight:700;">{{ enquiry.get_project_type_display }}</div>
+                                    </td>
+                                    <td width="12"></td>
+                                    <td style="padding:14px; border:1px solid #d8e0da; border-radius:8px; background:#ffffff;">
+                                        <div style="font-size:12px; color:#667085; font-weight:700; text-transform:uppercase;">Budget</div>
+                                        <div style="margin-top:6px; font-size:18px; font-weight:700;">{{ enquiry.get_budget_range_display|default:"Not provided" }}</div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:14px;">
+                                <tr>
+                                    <td style="padding:14px; border:1px solid #d8e0da; border-radius:8px; background:#ffffff;">
+                                        <div style="font-size:12px; color:#667085; font-weight:700; text-transform:uppercase;">Pages</div>
+                                        <div style="margin-top:6px; font-size:16px; font-weight:700;">{{ enquiry.get_pages_needed_display }}</div>
+                                    </td>
+                                    <td width="12"></td>
+                                    <td style="padding:14px; border:1px solid #d8e0da; border-radius:8px; background:#ffffff;">
+                                        <div style="font-size:12px; color:#667085; font-weight:700; text-transform:uppercase;">Timeframe</div>
+                                        <div style="margin-top:6px; font-size:16px; font-weight:700;">{{ enquiry.get_timeframe_display|default:"Not provided" }}</div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <h2 style="margin:28px 0 10px; font-size:18px;">Contact</h2>
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+                                <tr><td style="padding:8px 0; color:#667085;">Name</td><td style="padding:8px 0; font-weight:700;">{{ enquiry.client_name }}</td></tr>
+                                <tr><td style="padding:8px 0; color:#667085;">Business</td><td style="padding:8px 0;">{{ enquiry.business_name|default:"Not provided" }}</td></tr>
+                                <tr><td style="padding:8px 0; color:#667085;">Email</td><td style="padding:8px 0;"><a href="mailto:{{ enquiry.email }}" style="color:#087568; font-weight:700;">{{ enquiry.email }}</a></td></tr>
+                                <tr><td style="padding:8px 0; color:#667085;">Phone</td><td style="padding:8px 0;">{{ enquiry.phone|default:"Not provided" }}</td></tr>
+                                <tr><td style="padding:8px 0; color:#667085;">Website</td><td style="padding:8px 0;">{{ enquiry.current_website|default:"Not provided" }}</td></tr>
+                            </table>
+
+                            <h2 style="margin:28px 0 10px; font-size:18px;">Useful Details</h2>
+                            <div style="padding:16px; border:1px solid #d8e0da; border-radius:8px; background:#ffffff;">
+                                <p style="margin:0 0 10px; color:#667085; font-weight:700;">Features</p>
+                                <p style="margin:0; line-height:1.6;">{{ feature_labels|default:"Not provided" }}</p>
+                                <p style="margin:18px 0 10px; color:#667085; font-weight:700;">Content readiness</p>
+                                <p style="margin:0; line-height:1.6;">{{ content_status_labels|default:"Not provided" }}</p>
+                            </div>
+
+                            <h2 style="margin:28px 0 10px; font-size:18px;">Message</h2>
+                            <div style="padding:16px; border-left:4px solid #087568; background:#edf7f3; border-radius:8px;">
+                                <p style="margin:0; line-height:1.7;">{{ enquiry.message|default:"Not provided"|linebreaksbr }}</p>
+                            </div>
+
+                            <div style="margin-top:28px;">
+                                <a href="{{ admin_url }}" style="display:inline-block; padding:13px 18px; background:#101828; color:#ffffff; text-decoration:none; border-radius:8px; font-weight:700;">Review in Django admin</a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:18px 30px; background:#f8faf9; color:#667085; font-size:13px; line-height:1.6;">
+                            Replying to this email should reply to {{ enquiry.email }}.
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

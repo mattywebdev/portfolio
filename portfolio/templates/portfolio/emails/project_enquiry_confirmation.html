@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<body style="margin:0; padding:0; background:#f4f7f3; color:#101828; font-family:Arial, Helvetica, sans-serif;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f4f7f3; padding:28px 12px;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:660px; background:#ffffff; border:1px solid #d8e0da; border-radius:10px; overflow:hidden;">
+                    <tr>
+                        <td style="padding:30px; background:#101828; color:#ffffff;">
+                            <div style="font-size:13px; font-weight:700; color:#9ee6dc; text-transform:uppercase; letter-spacing:0.04em;">Matty Dev</div>
+                            <h1 style="margin:10px 0 0; font-size:28px; line-height:1.2;">Your project enquiry was received</h1>
+                            <p style="margin:12px 0 0; color:#d0d5dd; line-height:1.6;">Hi {{ enquiry.client_name }}, thanks for sending the details. I will review them before replying with practical next steps.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:26px 30px;">
+                            <p style="margin:0; color:#475467; line-height:1.7;">This is not an automatic quote or commitment. It is a quick confirmation that your enquiry reached me safely.</p>
+
+                            <h2 style="margin:28px 0 12px; font-size:19px;">Your Enquiry Summary</h2>
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td style="padding:14px; border:1px solid #d8e0da; border-radius:8px; background:#edf7f3;">
+                                        <div style="font-size:12px; color:#087568; font-weight:700; text-transform:uppercase;">Project</div>
+                                        <div style="margin-top:6px; font-size:18px; font-weight:700;">{{ enquiry.get_project_type_display }}</div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:14px;">
+                                <tr>
+                                    <td style="padding:14px; border:1px solid #d8e0da; border-radius:8px;">
+                                        <div style="font-size:12px; color:#667085; font-weight:700; text-transform:uppercase;">Pages</div>
+                                        <div style="margin-top:6px; font-size:16px; font-weight:700;">{{ enquiry.get_pages_needed_display }}</div>
+                                    </td>
+                                    <td width="12"></td>
+                                    <td style="padding:14px; border:1px solid #d8e0da; border-radius:8px;">
+                                        <div style="font-size:12px; color:#667085; font-weight:700; text-transform:uppercase;">Timeframe</div>
+                                        <div style="margin-top:6px; font-size:16px; font-weight:700;">{{ enquiry.get_timeframe_display|default:"Not provided" }}</div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <h2 style="margin:28px 0 10px; font-size:18px;">What You Mentioned</h2>
+                            <div style="padding:16px; border:1px solid #d8e0da; border-radius:8px; background:#ffffff;">
+                                <p style="margin:0 0 8px; color:#667085; font-weight:700;">Features</p>
+                                <p style="margin:0; line-height:1.6;">{{ feature_labels|default:"Not provided" }}</p>
+                                <p style="margin:18px 0 8px; color:#667085; font-weight:700;">Content readiness</p>
+                                <p style="margin:0; line-height:1.6;">{{ content_status_labels|default:"Not provided" }}</p>
+                            </div>
+
+                            <h2 style="margin:28px 0 10px; font-size:18px;">Your Message</h2>
+                            <div style="padding:16px; border-left:4px solid #087568; background:#edf7f3; border-radius:8px;">
+                                <p style="margin:0; line-height:1.7;">{{ enquiry.message|default:"Not provided"|linebreaksbr }}</p>
+                            </div>
+
+                            <h2 style="margin:28px 0 10px; font-size:18px;">What Happens Next</h2>
+                            <p style="margin:0; color:#475467; line-height:1.7;">I will read through the enquiry and reply if I need more context before suggesting a sensible direction.</p>
+
+                            <div style="margin-top:28px; padding:16px; background:#f8faf9; border-radius:8px; color:#475467; line-height:1.7;">
+                                <strong style="color:#101828;">Matty Dev</strong><br>
+                                Website design and Django development in Crewe<br>
+                                <a href="mailto:hello@matty-dev.com" style="color:#087568; font-weight:700;">hello@matty-dev.com</a><br>
+                                <a href="https://matty-dev.com/" style="color:#087568; font-weight:700;">matty-dev.com</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

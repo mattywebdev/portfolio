@@ -172,6 +172,8 @@ class StartProjectPageTests(TestCase):
         self.assertIn("Contact form, Basic SEO setup", notification.body)
         self.assertIn("Logo ready, Text/content ready", notification.body)
         self.assertIn("/admin/portfolio/projectenquiry/", notification.body)
+        self.assertEqual(len(notification.alternatives), 1)
+        self.assertIn("Review in Django admin", notification.alternatives[0].content)
 
         confirmation = mail.outbox[1]
         self.assertEqual(confirmation.to, ["test@example.com"])
@@ -180,24 +182,28 @@ class StartProjectPageTests(TestCase):
         self.assertIn("Hi Test Client,", confirmation.body)
         self.assertIn("Thanks for sending your project enquiry", confirmation.body)
         self.assertIn("Project: New business website", confirmation.body)
+        self.assertEqual(len(confirmation.alternatives), 1)
+        self.assertIn("Your project enquiry was received", confirmation.alternatives[0].content)
 
     @override_settings(
         EMAIL_BACKEND="portfolio.tests.FailingEmailBackend",
         PROJECT_ENQUIRY_NOTIFICATION_EMAIL="hello@matty-dev.com",
     )
     def test_project_enquiry_is_saved_when_notification_email_fails(self):
-        response = self.client.post(
-            reverse("portfolio:start_project"),
-            {
-                "project_type": "new_business_website",
-                "pages_needed": "two_four",
-                "client_name": "Test Client",
-                "email": "test@example.com",
-            },
-        )
+        with patch("portfolio.views.logger.exception") as mock_logger_exception:
+            response = self.client.post(
+                reverse("portfolio:start_project"),
+                {
+                    "project_type": "new_business_website",
+                    "pages_needed": "two_four",
+                    "client_name": "Test Client",
+                    "email": "test@example.com",
+                },
+            )
 
         self.assertRedirects(response, reverse("portfolio:start_project_thanks"))
         self.assertEqual(ProjectEnquiry.objects.count(), 1)
+        self.assertEqual(mock_logger_exception.call_count, 2)
 
     @override_settings(
         EMAIL_PROVIDER="resend",
@@ -236,6 +242,8 @@ class StartProjectPageTests(TestCase):
         self.assertIn(b'"to": ["hello@matty-dev.com"]', notification_request.data)
         self.assertIn(b'"reply_to": "test@example.com"', notification_request.data)
         self.assertIn(b'"subject": "New project enquiry from Test Client"', notification_request.data)
+        self.assertIn(b'"html":', notification_request.data)
+        self.assertIn(b"Review in Django admin", notification_request.data)
         self.assertIn(b"Contact form", notification_request.data)
         self.assertIn(b"Review this enquiry", notification_request.data)
 
@@ -243,6 +251,7 @@ class StartProjectPageTests(TestCase):
         self.assertIn(b'"to": ["test@example.com"]', confirmation_request.data)
         self.assertIn(b'"reply_to": "hello@matty-dev.com"', confirmation_request.data)
         self.assertIn(b'"subject": "Your project enquiry was received"', confirmation_request.data)
+        self.assertIn(b'"html":', confirmation_request.data)
         self.assertIn(b"Thanks for sending your project enquiry", confirmation_request.data)
 
     def test_invalid_project_enquiry_submission_does_not_create_enquiry(self):

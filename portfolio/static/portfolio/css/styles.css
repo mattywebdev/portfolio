@@ -1086,6 +1086,28 @@ h1 {
     max-width: 680px;
 }
 
+.email-confirmation-note {
+    max-width: 680px;
+    margin: 24px 0 0;
+    padding: 18px 20px;
+    border: 1px solid rgba(8, 117, 104, 0.28);
+    border-left: 6px solid var(--accent);
+    border-radius: 8px;
+    background: #eef8f6;
+}
+
+.email-confirmation-note span {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--ink);
+    font-weight: 850;
+}
+
+.email-confirmation-note p {
+    max-width: none;
+    margin: 0;
+}
+
 .thanks-next-steps {
     padding: 20px;
     border: 1px solid var(--border);

@@ -24,8 +24,14 @@
             <p>
                 Thanks for sending the details. I will review the scope, content, timing,
                 and contact information before replying with practical next steps.
-                A confirmation email should arrive in your inbox shortly.
             </p>
+            <div class="email-confirmation-note" role="status">
+                <span>Confirmation email sent</span>
+                <p>
+                    A copy of your enquiry should arrive at the email address you provided
+                    shortly. If it is not visible, check your spam or junk folder.
+                </p>
+            </div>
             <div class="hero-actions">
                 <a class="button primary" href="{% url 'portfolio:home' %}#projects">View related work</a>
                 <a class="button secondary" href="{% url 'portfolio:start_project' %}">Send another enquiry</a>
@@ -37,7 +43,7 @@
             <ul class="next-step-list">
                 <li>I check the project type, page count, features, and existing website context.</li>
                 <li>I look at what content is ready and where you might need help.</li>
-                <li>A confirmation email is sent to the address you provided.</li>
+                <li>Your confirmation email includes a summary of the enquiry.</li>
                 <li>You get a practical reply instead of an automatic quote generated from a form.</li>
             </ul>
         </div>

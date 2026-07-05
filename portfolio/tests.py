@@ -219,6 +219,8 @@ class StartProjectPageTests(TestCase):
         resend_request = mock_urlopen.call_args.args[0]
         self.assertEqual(resend_request.full_url, "https://api.resend.test/emails")
         self.assertEqual(resend_request.headers["Authorization"], "Bearer test-api-key")
+        self.assertEqual(resend_request.headers["Accept"], "application/json")
+        self.assertIn("MattyDevPortfolio", resend_request.headers["User-agent"])
         self.assertIn(b'"reply_to": "test@example.com"', resend_request.data)
         self.assertIn(b'"subject": "New project enquiry from Test Client"', resend_request.data)
         self.assertIn(b"Contact form", resend_request.data)

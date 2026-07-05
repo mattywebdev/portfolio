@@ -53,7 +53,9 @@ def send_project_enquiry_notification_with_resend(enquiry, message):
         data=payload,
         headers={
             "Authorization": f"Bearer {settings.RESEND_API_KEY}",
+            "Accept": "application/json",
             "Content-Type": "application/json",
+            "User-Agent": "MattyDevPortfolio/1.0 (https://matty-dev.com)",
         },
         method="POST",
     )

@@ -1,3 +1,5 @@
+from unittest.mock import MagicMock, patch
+
 from django.core import mail
 from django.core.mail.backends.base import BaseEmailBackend
 from django.contrib.auth import get_user_model
@@ -184,6 +186,42 @@ class StartProjectPageTests(TestCase):
 
         self.assertRedirects(response, reverse("portfolio:start_project_thanks"))
         self.assertEqual(ProjectEnquiry.objects.count(), 1)
+
+    @override_settings(
+        EMAIL_PROVIDER="resend",
+        RESEND_API_KEY="test-api-key",
+        RESEND_API_URL="https://api.resend.test/emails",
+        DEFAULT_FROM_EMAIL="Matty Dev <hello@matty-dev.com>",
+        PROJECT_ENQUIRY_NOTIFICATION_EMAIL="hello@matty-dev.com",
+        EMAIL_TIMEOUT=10,
+    )
+    @patch("portfolio.views.request.urlopen")
+    def test_valid_project_enquiry_submission_sends_resend_notification(self, mock_urlopen):
+        mock_response = MagicMock()
+        mock_response.status = 200
+        mock_urlopen.return_value.__enter__.return_value = mock_response
+
+        response = self.client.post(
+            reverse("portfolio:start_project"),
+            {
+                "project_type": "new_business_website",
+                "pages_needed": "two_four",
+                "features": ["contact_form"],
+                "content_status": ["logo_ready"],
+                "client_name": "Test Client",
+                "email": "test@example.com",
+            },
+        )
+
+        self.assertRedirects(response, reverse("portfolio:start_project_thanks"))
+        mock_urlopen.assert_called_once()
+
+        resend_request = mock_urlopen.call_args.args[0]
+        self.assertEqual(resend_request.full_url, "https://api.resend.test/emails")
+        self.assertEqual(resend_request.headers["Authorization"], "Bearer test-api-key")
+        self.assertIn(b'"reply_to": "test@example.com"', resend_request.data)
+        self.assertIn(b'"subject": "New project enquiry from Test Client"', resend_request.data)
+        self.assertIn(b"Contact form", resend_request.data)
 
     def test_invalid_project_enquiry_submission_does_not_create_enquiry(self):
         response = self.client.post(

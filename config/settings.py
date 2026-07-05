@@ -123,7 +123,8 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 
 # Email
-# Real SMTP credentials live in the ignored .env file on the VPS.
+# Real provider credentials live in the ignored .env file on the VPS.
+EMAIL_PROVIDER = os.getenv("EMAIL_PROVIDER", "smtp")
 EMAIL_BACKEND = os.getenv(
     "EMAIL_BACKEND",
     "django.core.mail.backends.console.EmailBackend",
@@ -143,3 +144,5 @@ PROJECT_ENQUIRY_NOTIFICATION_EMAIL = os.getenv(
     "PROJECT_ENQUIRY_NOTIFICATION_EMAIL",
     "hello@matty-dev.com",
 )
+RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
+RESEND_API_URL = os.getenv("RESEND_API_URL", "https://api.resend.com/emails")

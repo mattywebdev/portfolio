@@ -1,4 +1,6 @@
 import logging
+import json
+from urllib import request
 
 from django.conf import settings
 from django.core.mail import EmailMessage
@@ -32,6 +34,46 @@ def get_choice_labels(selected_values, choices):
     )
 
 
+def send_project_enquiry_notification_with_resend(enquiry, message):
+    if not settings.RESEND_API_KEY:
+        raise RuntimeError("RESEND_API_KEY is not configured.")
+
+    payload = json.dumps(
+        {
+            "from": settings.DEFAULT_FROM_EMAIL,
+            "to": [settings.PROJECT_ENQUIRY_NOTIFICATION_EMAIL],
+            "reply_to": enquiry.email,
+            "subject": f"New project enquiry from {enquiry.client_name}",
+            "text": message,
+        }
+    ).encode("utf-8")
+
+    resend_request = request.Request(
+        settings.RESEND_API_URL,
+        data=payload,
+        headers={
+            "Authorization": f"Bearer {settings.RESEND_API_KEY}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+
+    with request.urlopen(resend_request, timeout=settings.EMAIL_TIMEOUT) as response:
+        if response.status >= 400:
+            raise RuntimeError(f"Resend API returned status {response.status}.")
+
+
+def send_project_enquiry_notification_with_smtp(enquiry, message):
+    email = EmailMessage(
+        subject=f"New project enquiry from {enquiry.client_name}",
+        body=message,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[settings.PROJECT_ENQUIRY_NOTIFICATION_EMAIL],
+        reply_to=[enquiry.email],
+    )
+    email.send(fail_silently=False)
+
+
 def send_project_enquiry_notification(enquiry):
     message = render_to_string(
         "portfolio/emails/project_enquiry_notification.txt",
@@ -45,14 +87,11 @@ def send_project_enquiry_notification(enquiry):
         },
     )
 
-    email = EmailMessage(
-        subject=f"New project enquiry from {enquiry.client_name}",
-        body=message,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[settings.PROJECT_ENQUIRY_NOTIFICATION_EMAIL],
-        reply_to=[enquiry.email],
-    )
-    email.send(fail_silently=False)
+    if settings.EMAIL_PROVIDER.lower() == "resend":
+        send_project_enquiry_notification_with_resend(enquiry, message)
+        return
+
+    send_project_enquiry_notification_with_smtp(enquiry, message)
 
 
 def home(request):

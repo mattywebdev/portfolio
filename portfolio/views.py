@@ -34,16 +34,16 @@ def get_choice_labels(selected_values, choices):
     )
 
 
-def send_project_enquiry_notification_with_resend(enquiry, message):
+def send_email_with_resend(subject, message, to_email, reply_to=None):
     if not settings.RESEND_API_KEY:
         raise RuntimeError("RESEND_API_KEY is not configured.")
 
     payload = json.dumps(
         {
             "from": settings.DEFAULT_FROM_EMAIL,
-            "to": [settings.PROJECT_ENQUIRY_NOTIFICATION_EMAIL],
-            "reply_to": enquiry.email,
-            "subject": f"New project enquiry from {enquiry.client_name}",
+            "to": [to_email],
+            "reply_to": reply_to or settings.PROJECT_ENQUIRY_NOTIFICATION_EMAIL,
+            "subject": subject,
             "text": message,
         }
     ).encode("utf-8")
@@ -65,15 +65,23 @@ def send_project_enquiry_notification_with_resend(enquiry, message):
             raise RuntimeError(f"Resend API returned status {response.status}.")
 
 
-def send_project_enquiry_notification_with_smtp(enquiry, message):
+def send_email_with_smtp(subject, message, to_email, reply_to=None):
     email = EmailMessage(
-        subject=f"New project enquiry from {enquiry.client_name}",
+        subject=subject,
         body=message,
         from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[settings.PROJECT_ENQUIRY_NOTIFICATION_EMAIL],
-        reply_to=[enquiry.email],
+        to=[to_email],
+        reply_to=[reply_to or settings.PROJECT_ENQUIRY_NOTIFICATION_EMAIL],
     )
     email.send(fail_silently=False)
+
+
+def send_project_email(subject, message, to_email, reply_to=None):
+    if settings.EMAIL_PROVIDER.lower() == "resend":
+        send_email_with_resend(subject, message, to_email, reply_to=reply_to)
+        return
+
+    send_email_with_smtp(subject, message, to_email, reply_to=reply_to)
 
 
 def send_project_enquiry_notification(enquiry):
@@ -91,11 +99,33 @@ def send_project_enquiry_notification(enquiry):
         },
     )
 
-    if settings.EMAIL_PROVIDER.lower() == "resend":
-        send_project_enquiry_notification_with_resend(enquiry, message)
-        return
+    send_project_email(
+        subject=f"New project enquiry from {enquiry.client_name}",
+        message=message,
+        to_email=settings.PROJECT_ENQUIRY_NOTIFICATION_EMAIL,
+        reply_to=enquiry.email,
+    )
 
-    send_project_enquiry_notification_with_smtp(enquiry, message)
+
+def send_project_enquiry_confirmation(enquiry):
+    message = render_to_string(
+        "portfolio/emails/project_enquiry_confirmation.txt",
+        {
+            "enquiry": enquiry,
+            "feature_labels": get_choice_labels(enquiry.features, FEATURE_CHOICES),
+            "content_status_labels": get_choice_labels(
+                enquiry.content_status,
+                CONTENT_STATUS_CHOICES,
+            ),
+        },
+    )
+
+    send_project_email(
+        subject="Your project enquiry was received",
+        message=message,
+        to_email=enquiry.email,
+        reply_to=settings.PROJECT_ENQUIRY_NOTIFICATION_EMAIL,
+    )
 
 
 def home(request):
@@ -176,6 +206,14 @@ def start_project(request):
             except Exception:
                 logger.exception(
                     "Project enquiry notification email failed for enquiry %s.",
+                    enquiry.pk,
+                )
+
+            try:
+                send_project_enquiry_confirmation(enquiry)
+            except Exception:
+                logger.exception(
+                    "Project enquiry confirmation email failed for enquiry %s.",
                     enquiry.pk,
                 )
 

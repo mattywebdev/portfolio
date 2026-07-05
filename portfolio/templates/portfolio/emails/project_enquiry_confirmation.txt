@@ -1,0 +1,35 @@
+{% autoescape off %}Hi {{ enquiry.client_name }},
+
+Thanks for sending your project enquiry through Matty Dev.
+
+I have received the details and will review the scope, timing, content, and contact information before replying with practical next steps. This is not an automatic quote or commitment, just confirmation that the enquiry reached me.
+
+Your enquiry summary
+--------------------
+Project: {{ enquiry.get_project_type_display }}
+Pages: {{ enquiry.get_pages_needed_display }}
+Budget: {{ enquiry.get_budget_range_display|default:"Not provided" }}
+Timeframe: {{ enquiry.get_timeframe_display|default:"Not provided" }}
+
+Features mentioned
+------------------
+{{ feature_labels|default:"Not provided" }}
+
+Content readiness
+-----------------
+{{ content_status_labels|default:"Not provided" }}
+
+Your message
+------------
+{{ enquiry.message|default:"Not provided" }}
+
+What happens next
+-----------------
+I will read through the enquiry and reply if I need more context before suggesting a sensible direction.
+
+Thanks,
+Matty
+Matty Dev
+hello@matty-dev.com
+https://matty-dev.com/
+{% endautoescape %}

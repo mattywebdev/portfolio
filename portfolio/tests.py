@@ -160,7 +160,7 @@ class StartProjectPageTests(TestCase):
         )
 
         self.assertRedirects(response, reverse("portfolio:start_project_thanks"))
-        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 2)
 
         notification = mail.outbox[0]
         self.assertEqual(notification.to, ["hello@matty-dev.com"])
@@ -172,6 +172,14 @@ class StartProjectPageTests(TestCase):
         self.assertIn("Contact form, Basic SEO setup", notification.body)
         self.assertIn("Logo ready, Text/content ready", notification.body)
         self.assertIn("/admin/portfolio/projectenquiry/", notification.body)
+
+        confirmation = mail.outbox[1]
+        self.assertEqual(confirmation.to, ["test@example.com"])
+        self.assertEqual(confirmation.reply_to, ["hello@matty-dev.com"])
+        self.assertEqual(confirmation.subject, "Your project enquiry was received")
+        self.assertIn("Hi Test Client,", confirmation.body)
+        self.assertIn("Thanks for sending your project enquiry", confirmation.body)
+        self.assertIn("Project: New business website", confirmation.body)
 
     @override_settings(
         EMAIL_BACKEND="portfolio.tests.FailingEmailBackend",
@@ -218,17 +226,24 @@ class StartProjectPageTests(TestCase):
         )
 
         self.assertRedirects(response, reverse("portfolio:start_project_thanks"))
-        mock_urlopen.assert_called_once()
+        self.assertEqual(mock_urlopen.call_count, 2)
 
-        resend_request = mock_urlopen.call_args.args[0]
-        self.assertEqual(resend_request.full_url, "https://api.resend.test/emails")
-        self.assertEqual(resend_request.headers["Authorization"], "Bearer test-api-key")
-        self.assertEqual(resend_request.headers["Accept"], "application/json")
-        self.assertIn("MattyDevPortfolio", resend_request.headers["User-agent"])
-        self.assertIn(b'"reply_to": "test@example.com"', resend_request.data)
-        self.assertIn(b'"subject": "New project enquiry from Test Client"', resend_request.data)
-        self.assertIn(b"Contact form", resend_request.data)
-        self.assertIn(b"Review this enquiry", resend_request.data)
+        notification_request = mock_urlopen.call_args_list[0].args[0]
+        self.assertEqual(notification_request.full_url, "https://api.resend.test/emails")
+        self.assertEqual(notification_request.headers["Authorization"], "Bearer test-api-key")
+        self.assertEqual(notification_request.headers["Accept"], "application/json")
+        self.assertIn("MattyDevPortfolio", notification_request.headers["User-agent"])
+        self.assertIn(b'"to": ["hello@matty-dev.com"]', notification_request.data)
+        self.assertIn(b'"reply_to": "test@example.com"', notification_request.data)
+        self.assertIn(b'"subject": "New project enquiry from Test Client"', notification_request.data)
+        self.assertIn(b"Contact form", notification_request.data)
+        self.assertIn(b"Review this enquiry", notification_request.data)
+
+        confirmation_request = mock_urlopen.call_args_list[1].args[0]
+        self.assertIn(b'"to": ["test@example.com"]', confirmation_request.data)
+        self.assertIn(b'"reply_to": "hello@matty-dev.com"', confirmation_request.data)
+        self.assertIn(b'"subject": "Your project enquiry was received"', confirmation_request.data)
+        self.assertIn(b"Thanks for sending your project enquiry", confirmation_request.data)
 
     def test_invalid_project_enquiry_submission_does_not_create_enquiry(self):
         response = self.client.post(
@@ -251,6 +266,7 @@ class StartProjectPageTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "portfolio/start_project_thanks.html")
         self.assertContains(response, "Your project enquiry has been sent.")
+        self.assertContains(response, "A confirmation email should arrive in your inbox shortly.")
         self.assertContains(response, '<meta name="robots" content="noindex,follow">')
 
 

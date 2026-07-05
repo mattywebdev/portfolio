@@ -277,6 +277,7 @@ class StartProjectPageTests(TestCase):
         self.assertContains(response, "Your project enquiry has been sent.")
         self.assertContains(response, "Confirmation email sent")
         self.assertContains(response, "A copy of your enquiry should arrive at the email address you provided")
+        self.assertNotContains(response, "data-email-toast")
         self.assertContains(response, '<meta name="robots" content="noindex,follow">')
 
     def test_start_project_thanks_page_shows_confirmation_email_once(self):
@@ -289,6 +290,8 @@ class StartProjectPageTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "client@example.com")
         self.assertContains(response, "A copy of your enquiry should arrive shortly")
+        self.assertContains(response, "data-email-toast")
+        self.assertContains(response, "Close confirmation message")
         self.assertNotIn("project_enquiry_confirmation_email", self.client.session)
 
 

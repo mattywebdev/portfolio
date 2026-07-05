@@ -1108,6 +1108,12 @@ h1 {
     margin: 0;
 }
 
+.email-confirmation-note strong {
+    color: var(--accent-strong);
+    font-weight: 850;
+    word-break: break-word;
+}
+
 .thanks-next-steps {
     padding: 20px;
     border: 1px solid var(--border);

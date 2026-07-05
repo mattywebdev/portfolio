@@ -242,6 +242,7 @@ def start_project(request):
         form = ProjectEnquiryForm(request.POST)
         if form.is_valid():
             enquiry = form.save()
+            request.session["project_enquiry_confirmation_email"] = enquiry.email
 
             try:
                 send_project_enquiry_notification(enquiry)
@@ -274,10 +275,13 @@ def start_project(request):
 
 
 def start_project_thanks(request):
+    confirmation_email = request.session.pop("project_enquiry_confirmation_email", "")
+
     return render(
         request,
         "portfolio/start_project_thanks.html",
         {
+            "confirmation_email": confirmation_email,
             "profile_links": get_profile_links(),
         },
     )

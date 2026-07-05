@@ -279,6 +279,18 @@ class StartProjectPageTests(TestCase):
         self.assertContains(response, "A copy of your enquiry should arrive at the email address you provided")
         self.assertContains(response, '<meta name="robots" content="noindex,follow">')
 
+    def test_start_project_thanks_page_shows_confirmation_email_once(self):
+        session = self.client.session
+        session["project_enquiry_confirmation_email"] = "client@example.com"
+        session.save()
+
+        response = self.client.get(reverse("portfolio:start_project_thanks"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "client@example.com")
+        self.assertContains(response, "A copy of your enquiry should arrive shortly")
+        self.assertNotIn("project_enquiry_confirmation_email", self.client.session)
+
 
 class ProjectEnquiryAdminTests(TestCase):
     def setUp(self):

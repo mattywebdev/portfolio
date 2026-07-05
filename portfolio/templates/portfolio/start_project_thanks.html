@@ -28,8 +28,14 @@
             <div class="email-confirmation-note" role="status">
                 <span>Confirmation email sent</span>
                 <p>
+                    {% if confirmation_email %}
+                    A copy of your enquiry should arrive shortly at
+                    <strong>{{ confirmation_email }}</strong>. If it is not visible, check your
+                    spam or junk folder.
+                    {% else %}
                     A copy of your enquiry should arrive at the email address you provided
                     shortly. If it is not visible, check your spam or junk folder.
+                    {% endif %}
                 </p>
             </div>
             <div class="hero-actions">

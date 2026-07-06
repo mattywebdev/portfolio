@@ -10,6 +10,7 @@ This Django project presents selected web development work, project case studies
 - React-powered project filtering built with Vite.
 - Admin-managed projects, technologies, screenshots, links, and case study content.
 - Guided project enquiry form for website and web app leads.
+- Project enquiry email notifications and client confirmation emails.
 - Project enquiry admin workflow with quick status actions.
 - Responsive CSS layout for desktop and mobile.
 - SEO basics including metadata, Open Graph tags, `robots.txt`, and `sitemap.xml`.
@@ -53,7 +54,7 @@ py manage.py runserver
 
 ## Project Status
 
-The portfolio is deployed and actively being improved. The current focus is polishing the project enquiry flow into a practical client intake experience.
+The portfolio is deployed and actively being improved. The project enquiry flow is live, with the next focus moving toward admin workflow polish, content refinement, and wider mobile QA.
 
 ## License
 

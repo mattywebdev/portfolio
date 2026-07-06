@@ -207,6 +207,11 @@ def sitemap_xml(request):
             "priority": "0.8",
             "changefreq": "monthly",
         },
+        {
+            "loc": SITE_URL + reverse("portfolio:privacy_policy"),
+            "priority": "0.4",
+            "changefreq": "yearly",
+        },
     ]
 
     for project in Project.objects.exclude(slug__isnull=True).exclude(slug=""):
@@ -282,6 +287,16 @@ def start_project_thanks(request):
         "portfolio/start_project_thanks.html",
         {
             "confirmation_email": confirmation_email,
+            "profile_links": get_profile_links(),
+        },
+    )
+
+
+def privacy_policy(request):
+    return render(
+        request,
+        "portfolio/privacy_policy.html",
+        {
             "profile_links": get_profile_links(),
         },
     )

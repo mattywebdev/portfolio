@@ -59,6 +59,11 @@ class HomePageTests(TestCase):
         self.assertContains(response, "Affiliate Site")
         self.assertContains(response, "Portfolio Site")
 
+    def test_home_page_links_to_privacy_policy(self):
+        response = self.client.get(reverse("portfolio:home"))
+
+        self.assertContains(response, reverse("portfolio:privacy_policy"))
+
     def test_home_page_includes_projects_in_context(self):
         response = self.client.get(reverse("portfolio:home"))
 
@@ -94,7 +99,20 @@ class HomePageTests(TestCase):
         self.assertEqual(response["Content-Type"], "application/xml")
         self.assertContains(response, "https://matty-dev.com/")
         self.assertContains(response, "https://matty-dev.com/start-project/")
+        self.assertContains(response, "https://matty-dev.com/privacy/")
         self.assertContains(response, "https://matty-dev.com/projects/portfolio-site/")
+
+    def test_privacy_policy_page_loads(self):
+        response = self.client.get(reverse("portfolio:privacy_policy"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "portfolio/privacy_policy.html")
+        self.assertContains(response, "Privacy Policy")
+        self.assertContains(response, "Mateusz Obstawski")
+        self.assertContains(response, "trading as")
+        self.assertContains(response, "I do not publish my home address")
+        self.assertContains(response, "Project enquiries are normally kept")
+        self.assertContains(response, "Information Commissioner's Office")
 
 
 class StartProjectPageTests(TestCase):
@@ -106,6 +124,7 @@ class StartProjectPageTests(TestCase):
         self.assertContains(response, "Send the project shape")
         self.assertContains(response, "Project shape")
         self.assertContains(response, "Local service website")
+        self.assertContains(response, reverse("portfolio:privacy_policy"))
 
     def test_valid_project_enquiry_submission_creates_enquiry(self):
         response = self.client.post(

@@ -121,3 +121,27 @@ class ProjectEnquiry(models.Model):
 
     def __str__(self):
         return f"{self.client_name} - {self.get_project_type_display()}"
+
+
+class ProjectEnquirySpamAttempt(models.Model):
+    REASON_CHOICES = [
+        ("honeypot", "Honeypot filled"),
+        ("too_fast", "Submitted too quickly"),
+        ("invalid_timestamp", "Invalid timestamp"),
+    ]
+
+    reason = models.CharField(max_length=40, choices=REASON_CHOICES)
+    path = models.CharField(max_length=240, blank=True)
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
+    user_agent = models.CharField(max_length=300, blank=True)
+    submitted_email = models.EmailField(blank=True)
+    submitted_name = models.CharField(max_length=120, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "blocked enquiry attempt"
+        verbose_name_plural = "blocked enquiry attempts"
+
+    def __str__(self):
+        return f"{self.get_reason_display()} at {self.created_at:%Y-%m-%d %H:%M}"

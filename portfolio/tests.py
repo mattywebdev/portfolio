@@ -1,3 +1,4 @@
+import time
 from unittest.mock import MagicMock, patch
 
 from django.core import mail
@@ -7,7 +8,8 @@ from django.test import override_settings
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import Project, ProjectEnquiry, Technology
+from .forms import ProjectEnquiryForm
+from .models import Project, ProjectEnquiry, ProjectEnquirySpamAttempt, Technology
 
 
 class FailingEmailBackend(BaseEmailBackend):
@@ -116,6 +118,19 @@ class HomePageTests(TestCase):
 
 
 class StartProjectPageTests(TestCase):
+    def project_enquiry_data(self, **overrides):
+        data = {
+            "project_type": "new_business_website",
+            "pages_needed": "two_four",
+            "client_name": "Test Client",
+            "email": "test@example.com",
+            "website": "",
+            "rendered_at": ProjectEnquiryForm.create_rendered_at_token(time.time() - 5),
+        }
+        data.update(overrides)
+
+        return data
+
     def test_start_project_page_loads(self):
         response = self.client.get(reverse("portfolio:start_project"))
 
@@ -125,24 +140,22 @@ class StartProjectPageTests(TestCase):
         self.assertContains(response, "Project shape")
         self.assertContains(response, "Local service website")
         self.assertContains(response, reverse("portfolio:privacy_policy"))
+        self.assertContains(response, 'name="website"', html=False)
+        self.assertContains(response, 'name="rendered_at"', html=False)
 
     def test_valid_project_enquiry_submission_creates_enquiry(self):
         response = self.client.post(
             reverse("portfolio:start_project"),
-            {
-                "project_type": "new_business_website",
-                "pages_needed": "two_four",
-                "features": ["contact_form", "basic_seo"],
-                "content_status": ["logo_ready", "text_ready"],
-                "budget_range": "500_1000",
-                "timeframe": "two_four_weeks",
-                "client_name": "Test Client",
-                "business_name": "Test Business",
-                "email": "test@example.com",
-                "phone": "00000000000",
-                "current_website": "https://example.com",
-                "message": "I need a clean business website.",
-            },
+            self.project_enquiry_data(
+                features=["contact_form", "basic_seo"],
+                content_status=["logo_ready", "text_ready"],
+                budget_range="500_1000",
+                timeframe="two_four_weeks",
+                business_name="Test Business",
+                phone="00000000000",
+                current_website="https://example.com",
+                message="I need a clean business website.",
+            ),
         )
 
         self.assertRedirects(response, reverse("portfolio:start_project_thanks"))
@@ -162,20 +175,16 @@ class StartProjectPageTests(TestCase):
     def test_valid_project_enquiry_submission_sends_notification_email(self):
         response = self.client.post(
             reverse("portfolio:start_project"),
-            {
-                "project_type": "new_business_website",
-                "pages_needed": "two_four",
-                "features": ["contact_form", "basic_seo"],
-                "content_status": ["logo_ready", "text_ready"],
-                "budget_range": "500_1000",
-                "timeframe": "two_four_weeks",
-                "client_name": "Test Client",
-                "business_name": "Test & Business",
-                "email": "test@example.com",
-                "phone": "00000000000",
-                "current_website": "https://example.com",
-                "message": "I need a clean business website.",
-            },
+            self.project_enquiry_data(
+                features=["contact_form", "basic_seo"],
+                content_status=["logo_ready", "text_ready"],
+                budget_range="500_1000",
+                timeframe="two_four_weeks",
+                business_name="Test & Business",
+                phone="00000000000",
+                current_website="https://example.com",
+                message="I need a clean business website.",
+            ),
         )
 
         self.assertRedirects(response, reverse("portfolio:start_project_thanks"))
@@ -212,12 +221,7 @@ class StartProjectPageTests(TestCase):
         with patch("portfolio.views.logger.exception") as mock_logger_exception:
             response = self.client.post(
                 reverse("portfolio:start_project"),
-                {
-                    "project_type": "new_business_website",
-                    "pages_needed": "two_four",
-                    "client_name": "Test Client",
-                    "email": "test@example.com",
-                },
+                self.project_enquiry_data(),
             )
 
         self.assertRedirects(response, reverse("portfolio:start_project_thanks"))
@@ -240,14 +244,10 @@ class StartProjectPageTests(TestCase):
 
         response = self.client.post(
             reverse("portfolio:start_project"),
-            {
-                "project_type": "new_business_website",
-                "pages_needed": "two_four",
-                "features": ["contact_form"],
-                "content_status": ["logo_ready"],
-                "client_name": "Test Client",
-                "email": "test@example.com",
-            },
+            self.project_enquiry_data(
+                features=["contact_form"],
+                content_status=["logo_ready"],
+            ),
         )
 
         self.assertRedirects(response, reverse("portfolio:start_project_thanks"))
@@ -276,17 +276,47 @@ class StartProjectPageTests(TestCase):
     def test_invalid_project_enquiry_submission_does_not_create_enquiry(self):
         response = self.client.post(
             reverse("portfolio:start_project"),
-            {
-                "project_type": "new_business_website",
-                "pages_needed": "two_four",
-                "email": "not-an-email",
-            },
+            self.project_enquiry_data(
+                project_type="new_business_website",
+                pages_needed="two_four",
+                email="not-an-email",
+            ),
         )
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(ProjectEnquiry.objects.count(), 0)
         self.assertContains(response, "Some details need a quick check")
         self.assertContains(response, "Enter a valid email address.")
+
+    def test_honeypot_submission_is_blocked_and_counted(self):
+        response = self.client.post(
+            reverse("portfolio:start_project"),
+            self.project_enquiry_data(website="https://spam.example"),
+            HTTP_USER_AGENT="SpamBot/1.0",
+            REMOTE_ADDR="127.0.0.1",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(ProjectEnquiry.objects.count(), 0)
+        self.assertEqual(ProjectEnquirySpamAttempt.objects.count(), 1)
+
+        spam_attempt = ProjectEnquirySpamAttempt.objects.get()
+        self.assertEqual(spam_attempt.reason, "honeypot")
+        self.assertEqual(spam_attempt.submitted_email, "test@example.com")
+        self.assertEqual(spam_attempt.user_agent, "SpamBot/1.0")
+
+    def test_too_fast_submission_is_blocked_and_counted(self):
+        response = self.client.post(
+            reverse("portfolio:start_project"),
+            self.project_enquiry_data(
+                rendered_at=ProjectEnquiryForm.create_rendered_at_token()
+            ),
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(ProjectEnquiry.objects.count(), 0)
+        self.assertEqual(ProjectEnquirySpamAttempt.objects.count(), 1)
+        self.assertEqual(ProjectEnquirySpamAttempt.objects.get().reason, "too_fast")
 
     def test_start_project_thanks_page_loads(self):
         response = self.client.get(reverse("portfolio:start_project_thanks"))

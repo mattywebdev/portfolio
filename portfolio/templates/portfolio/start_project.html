@@ -84,6 +84,8 @@
 
         <form class="project-enquiry-form" method="post" novalidate>
             {% csrf_token %}
+            {{ form.website }}
+            {{ form.rendered_at }}
 
             <div id="project-enquiry-client-feedback" class="form-errors form-error-summary" role="alert" tabindex="-1" hidden>
                 <h3>Some details need a quick check</h3>

@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.utils.html import format_html, format_html_join
 
 from .forms import CONTENT_STATUS_CHOICES, FEATURE_CHOICES
-from .models import Project, ProjectEnquiry, Technology
+from .models import Project, ProjectEnquiry, ProjectEnquirySpamAttempt, Technology
 
 
 def format_selected_choices(selected_values, choices):
@@ -339,3 +339,26 @@ class ProjectEnquiryAdmin(admin.ModelAdmin):
     @admin.action(description="Mark selected enquiries as spam")
     def mark_as_spam(self, request, queryset):
         self.update_status(request, queryset, "spam")
+
+
+@admin.register(ProjectEnquirySpamAttempt)
+class ProjectEnquirySpamAttemptAdmin(admin.ModelAdmin):
+    list_display = [
+        "created_at",
+        "reason",
+        "submitted_email",
+        "submitted_name",
+        "ip_address",
+    ]
+    list_filter = ["reason", "created_at"]
+    search_fields = ["submitted_email", "submitted_name", "ip_address", "user_agent"]
+    readonly_fields = [
+        "reason",
+        "path",
+        "ip_address",
+        "user_agent",
+        "submitted_email",
+        "submitted_name",
+        "created_at",
+    ]
+    ordering = ["-created_at"]

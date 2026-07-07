@@ -10,7 +10,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 
 from .forms import CONTENT_STATUS_CHOICES, FEATURE_CHOICES, ProjectEnquiryForm
-from .models import Project
+from .models import Project, ProjectEnquirySpamAttempt
 from .selectors import (
     get_about,
     get_profile_links,
@@ -242,6 +242,26 @@ def sitemap_xml(request):
     return HttpResponse("\n".join(sitemap), content_type="application/xml")
 
 
+def get_client_ip(request):
+    forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
+
+    if forwarded_for:
+        return forwarded_for.split(",")[0].strip()
+
+    return request.META.get("REMOTE_ADDR")
+
+
+def record_project_enquiry_spam_attempt(request, form):
+    ProjectEnquirySpamAttempt.objects.create(
+        reason=form.spam_block_reason,
+        path=request.path[:240],
+        ip_address=get_client_ip(request),
+        user_agent=request.META.get("HTTP_USER_AGENT", "")[:300],
+        submitted_email=request.POST.get("email", "")[:254],
+        submitted_name=request.POST.get("client_name", "")[:120],
+    )
+
+
 def start_project(request):
     if request.method == "POST":
         form = ProjectEnquiryForm(request.POST)
@@ -266,8 +286,12 @@ def start_project(request):
                 )
 
             return redirect("portfolio:start_project_thanks")
+        if form.is_spam_blocked:
+            record_project_enquiry_spam_attempt(request, form)
     else:
-        form = ProjectEnquiryForm()
+        form = ProjectEnquiryForm(
+            initial={"rendered_at": ProjectEnquiryForm.create_rendered_at_token()}
+        )
 
     return render(
         request,

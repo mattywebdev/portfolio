@@ -1,4 +1,8 @@
+import time
+
 from django import forms
+from django.core import signing
+from django.core.exceptions import ValidationError
 
 from .models import ProjectEnquiry
 
@@ -31,6 +35,10 @@ CONTENT_STATUS_CHOICES = [
 
 
 class ProjectEnquiryForm(forms.ModelForm):
+    MINIMUM_SUBMIT_SECONDS = 2
+    RENDERED_AT_MAX_AGE_SECONDS = 60 * 60 * 2
+    SPAM_ERROR_MESSAGE = "Unable to send this enquiry. Please refresh the page and try again."
+
     features = forms.MultipleChoiceField(
         choices=FEATURE_CHOICES,
         widget=forms.CheckboxSelectMultiple(attrs={"aria-describedby": "features-help"}),
@@ -42,6 +50,56 @@ class ProjectEnquiryForm(forms.ModelForm):
         required=False,
         label="Content readiness",
     )
+    website = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput(attrs={"autocomplete": "off", "tabindex": "-1"}),
+        label="Leave this field blank",
+    )
+    rendered_at = forms.CharField(required=True, widget=forms.HiddenInput)
+
+    def __init__(self, *args, **kwargs):
+        self.spam_block_reason = ""
+        super().__init__(*args, **kwargs)
+
+    @property
+    def is_spam_blocked(self):
+        return bool(self.spam_block_reason)
+
+    def mark_spam_blocked(self, reason):
+        if not self.spam_block_reason:
+            self.spam_block_reason = reason
+
+    @classmethod
+    def create_rendered_at_token(cls, rendered_at=None):
+        return signing.dumps(rendered_at or time.time(), salt="project-enquiry-rendered-at")
+
+    def clean_website(self):
+        value = self.cleaned_data.get("website", "")
+
+        if value:
+            self.mark_spam_blocked("honeypot")
+            raise ValidationError(self.SPAM_ERROR_MESSAGE)
+
+        return value
+
+    def clean_rendered_at(self):
+        token = self.cleaned_data.get("rendered_at")
+
+        try:
+            rendered_at = signing.loads(
+                token,
+                salt="project-enquiry-rendered-at",
+                max_age=self.RENDERED_AT_MAX_AGE_SECONDS,
+            )
+        except signing.BadSignature as error:
+            self.mark_spam_blocked("invalid_timestamp")
+            raise ValidationError(self.SPAM_ERROR_MESSAGE) from error
+
+        if time.time() - float(rendered_at) < self.MINIMUM_SUBMIT_SECONDS:
+            self.mark_spam_blocked("too_fast")
+            raise ValidationError(self.SPAM_ERROR_MESSAGE)
+
+        return token
 
     class Meta:
         model = ProjectEnquiry

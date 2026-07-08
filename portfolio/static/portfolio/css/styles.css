@@ -1474,21 +1474,28 @@ h1 {
     }
 
     .choice-tooltip {
-        left: auto;
-        right: -8px;
-        width: min(230px, calc(100vw - 72px));
+        position: fixed;
+        right: auto;
+        bottom: auto;
+        width: min(230px, calc(100vw - 32px));
         transform: translateY(4px);
     }
 
     .choice-tooltip::after {
-        left: auto;
-        right: 12px;
-        transform: rotate(45deg);
+        left: var(--tooltip-arrow-left, 50%);
+        right: auto;
+        transform: translateX(-50%) rotate(45deg);
     }
 
     .choice-info:hover .choice-tooltip,
-    .choice-info:focus .choice-tooltip,
+    .choice-info:focus .choice-tooltip {
+        visibility: hidden;
+        opacity: 0;
+    }
+
     .choice-info.is-open .choice-tooltip {
+        visibility: visible;
+        opacity: 1;
         transform: translateY(0);
     }
 

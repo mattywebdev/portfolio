@@ -396,14 +396,22 @@
         enquiryForm.querySelectorAll(".choice-info").forEach((button) => {
             button.addEventListener("click", (event) => {
                 event.stopPropagation();
+                const wasOpen = button.classList.contains("is-open");
 
                 enquiryForm.querySelectorAll(".choice-info.is-open").forEach((openButton) => {
                     if (openButton !== button) {
                         openButton.classList.remove("is-open");
+                        resetMobileTooltipPosition(openButton);
                     }
                 });
 
-                button.classList.toggle("is-open");
+                button.classList.toggle("is-open", !wasOpen);
+
+                if (button.classList.contains("is-open")) {
+                    positionMobileTooltip(button);
+                } else {
+                    resetMobileTooltipPosition(button);
+                }
             });
         });
 
@@ -414,8 +422,63 @@
 
             enquiryForm.querySelectorAll(".choice-info.is-open").forEach((button) => {
                 button.classList.remove("is-open");
+                resetMobileTooltipPosition(button);
             });
         });
+
+        window.addEventListener("resize", () => {
+            enquiryForm.querySelectorAll(".choice-info.is-open").forEach(positionMobileTooltip);
+        });
+
+        window.addEventListener("scroll", () => {
+            enquiryForm.querySelectorAll(".choice-info.is-open").forEach((button) => {
+                if (window.matchMedia("(max-width: 640px)").matches) {
+                    button.classList.remove("is-open");
+                    resetMobileTooltipPosition(button);
+                }
+            });
+        }, { passive: true });
+
+        function positionMobileTooltip(button) {
+            if (!window.matchMedia("(max-width: 640px)").matches) {
+                resetMobileTooltipPosition(button);
+                return;
+            }
+
+            const tooltip = button.querySelector(".choice-tooltip");
+            const iconRect = button.getBoundingClientRect();
+            const viewportPadding = 16;
+            const tooltipWidth = Math.min(230, window.innerWidth - viewportPadding * 2);
+            const preferredLeft = iconRect.left + iconRect.width / 2 - tooltipWidth / 2;
+            const left = Math.max(
+                viewportPadding,
+                Math.min(preferredLeft, window.innerWidth - tooltipWidth - viewportPadding)
+            );
+
+            tooltip.style.width = `${tooltipWidth}px`;
+            tooltip.style.left = `${left}px`;
+            tooltip.style.top = "0px";
+
+            const tooltipHeight = tooltip.offsetHeight;
+            const top = Math.max(12, iconRect.top - tooltipHeight - 10);
+            const arrowLeft = iconRect.left + iconRect.width / 2 - left;
+
+            tooltip.style.top = `${top}px`;
+            tooltip.style.setProperty("--tooltip-arrow-left", `${arrowLeft}px`);
+        }
+
+        function resetMobileTooltipPosition(button) {
+            const tooltip = button.querySelector(".choice-tooltip");
+
+            if (!tooltip) {
+                return;
+            }
+
+            tooltip.style.removeProperty("width");
+            tooltip.style.removeProperty("left");
+            tooltip.style.removeProperty("top");
+            tooltip.style.removeProperty("--tooltip-arrow-left");
+        }
 
         const clientErrorSummary = enquiryForm.querySelector("#project-enquiry-client-feedback");
         const requiredFields = [

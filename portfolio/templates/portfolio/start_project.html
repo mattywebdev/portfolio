@@ -158,21 +158,27 @@
                         {% for option in feature_options %}
                             <li>
                                 <div class="checkbox-option">
-                                    <label for="{{ option.id }}">
-                                        <input
-                                            type="checkbox"
-                                            name="features"
-                                            value="{{ option.value }}"
-                                            id="{{ option.id }}"
-                                            {% if option.checked %}checked{% endif %}
-                                            aria-describedby="features-help"
+                                    <div class="checkbox-option-row">
+                                        <label for="{{ option.id }}">
+                                            <input
+                                                type="checkbox"
+                                                name="features"
+                                                value="{{ option.value }}"
+                                                id="{{ option.id }}"
+                                                {% if option.checked %}checked{% endif %}
+                                                aria-describedby="features-help"
+                                            >
+                                            <span class="checkbox-option-label">{{ option.label }}</span>
+                                        </label>
+                                        <button
+                                            class="choice-info"
+                                            type="button"
+                                            aria-label="What does {{ option.label }} mean?"
                                         >
-                                        <span class="checkbox-option-label">{{ option.label }}</span>
-                                    </label>
-                                    <button class="choice-info" type="button" aria-label="{{ option.label }} information">
-                                        i
-                                        <span class="choice-tooltip" role="tooltip">{{ option.tooltip }}</span>
-                                    </button>
+                                            i
+                                            <span class="choice-tooltip" role="tooltip">{{ option.tooltip }}</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </li>
                         {% endfor %}
@@ -187,21 +193,27 @@
                         {% for option in content_status_options %}
                             <li>
                                 <div class="checkbox-option">
-                                    <label for="{{ option.id }}">
-                                        <input
-                                            type="checkbox"
-                                            name="content_status"
-                                            value="{{ option.value }}"
-                                            id="{{ option.id }}"
-                                            {% if option.checked %}checked{% endif %}
-                                            aria-describedby="content-status-help"
+                                    <div class="checkbox-option-row">
+                                        <label for="{{ option.id }}">
+                                            <input
+                                                type="checkbox"
+                                                name="content_status"
+                                                value="{{ option.value }}"
+                                                id="{{ option.id }}"
+                                                {% if option.checked %}checked{% endif %}
+                                                aria-describedby="content-status-help"
+                                            >
+                                            <span class="checkbox-option-label">{{ option.label }}</span>
+                                        </label>
+                                        <button
+                                            class="choice-info"
+                                            type="button"
+                                            aria-label="What does {{ option.label }} mean?"
                                         >
-                                        <span class="checkbox-option-label">{{ option.label }}</span>
-                                    </label>
-                                    <button class="choice-info" type="button" aria-label="{{ option.label }} information">
-                                        i
-                                        <span class="choice-tooltip" role="tooltip">{{ option.tooltip }}</span>
-                                    </button>
+                                            i
+                                            <span class="choice-tooltip" role="tooltip">{{ option.tooltip }}</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </li>
                         {% endfor %}

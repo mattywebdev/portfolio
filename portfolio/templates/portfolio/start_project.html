@@ -154,14 +154,58 @@
                 <div class="form-field checkbox-fieldset">
                     <span class="field-label">{{ form.features.label }}</span>
                     <p id="features-help" class="field-help">Optional. Choose every feature that sounds relevant.</p>
-                    {{ form.features }}
+                    <ul>
+                        {% for option in feature_options %}
+                            <li>
+                                <div class="checkbox-option">
+                                    <label for="{{ option.id }}">
+                                        <input
+                                            type="checkbox"
+                                            name="features"
+                                            value="{{ option.value }}"
+                                            id="{{ option.id }}"
+                                            {% if option.checked %}checked{% endif %}
+                                            aria-describedby="features-help"
+                                        >
+                                        <span class="checkbox-option-label">{{ option.label }}</span>
+                                    </label>
+                                    <button class="choice-info" type="button" aria-label="{{ option.label }} information">
+                                        i
+                                        <span class="choice-tooltip" role="tooltip">{{ option.tooltip }}</span>
+                                    </button>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
                     {{ form.features.errors }}
                 </div>
 
                 <div class="form-field checkbox-fieldset">
                     <span class="field-label">{{ form.content_status.label }}</span>
                     <p id="content-status-help" class="field-help">Optional. This helps me understand what is ready and what still needs support.</p>
-                    {{ form.content_status }}
+                    <ul>
+                        {% for option in content_status_options %}
+                            <li>
+                                <div class="checkbox-option">
+                                    <label for="{{ option.id }}">
+                                        <input
+                                            type="checkbox"
+                                            name="content_status"
+                                            value="{{ option.value }}"
+                                            id="{{ option.id }}"
+                                            {% if option.checked %}checked{% endif %}
+                                            aria-describedby="content-status-help"
+                                        >
+                                        <span class="checkbox-option-label">{{ option.label }}</span>
+                                    </label>
+                                    <button class="choice-info" type="button" aria-label="{{ option.label }} information">
+                                        i
+                                        <span class="choice-tooltip" role="tooltip">{{ option.tooltip }}</span>
+                                    </button>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
                     {{ form.content_status.errors }}
                 </div>
             </section>
@@ -334,6 +378,30 @@
             button.addEventListener("click", () => {
                 messageField.value = button.dataset.messageExample;
                 messageField.focus();
+            });
+        });
+
+        enquiryForm.querySelectorAll(".choice-info").forEach((button) => {
+            button.addEventListener("click", (event) => {
+                event.stopPropagation();
+
+                enquiryForm.querySelectorAll(".choice-info.is-open").forEach((openButton) => {
+                    if (openButton !== button) {
+                        openButton.classList.remove("is-open");
+                    }
+                });
+
+                button.classList.toggle("is-open");
+            });
+        });
+
+        document.addEventListener("click", (event) => {
+            if (event.target.closest(".choice-info")) {
+                return;
+            }
+
+            enquiryForm.querySelectorAll(".choice-info.is-open").forEach((button) => {
+                button.classList.remove("is-open");
             });
         });
 

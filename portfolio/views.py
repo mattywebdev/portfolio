@@ -9,7 +9,13 @@ from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse
 
-from .forms import CONTENT_STATUS_CHOICES, FEATURE_CHOICES, ProjectEnquiryForm
+from .forms import (
+    CONTENT_STATUS_CHOICES,
+    CONTENT_STATUS_TOOLTIPS,
+    FEATURE_CHOICES,
+    FEATURE_TOOLTIPS,
+    ProjectEnquiryForm,
+)
 from .models import Project, ProjectEnquirySpamAttempt
 from .selectors import (
     get_about,
@@ -262,6 +268,21 @@ def record_project_enquiry_spam_attempt(request, form):
     )
 
 
+def build_choice_options(choices, tooltips, form, field_name):
+    selected_values = set(form[field_name].value() or [])
+
+    return [
+        {
+            "value": value,
+            "label": label,
+            "tooltip": tooltips.get(value, ""),
+            "checked": value in selected_values,
+            "id": f"id_{field_name}_{index}",
+        }
+        for index, (value, label) in enumerate(choices)
+    ]
+
+
 def start_project(request):
     if request.method == "POST":
         form = ProjectEnquiryForm(request.POST)
@@ -298,6 +319,18 @@ def start_project(request):
         "portfolio/start_project.html",
         {
             "form": form,
+            "feature_options": build_choice_options(
+                FEATURE_CHOICES,
+                FEATURE_TOOLTIPS,
+                form,
+                "features",
+            ),
+            "content_status_options": build_choice_options(
+                CONTENT_STATUS_CHOICES,
+                CONTENT_STATUS_TOOLTIPS,
+                form,
+                "content_status",
+            ),
             "profile_links": get_profile_links(),
         },
     )

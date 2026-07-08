@@ -143,6 +143,11 @@ class StartProjectPageTests(TestCase):
         self.assertContains(response, reverse("portfolio:privacy_policy"))
         self.assertContains(response, 'name="website"', html=False)
         self.assertContains(response, 'name="rendered_at"', html=False)
+        self.assertContains(response, "choice-info")
+        self.assertContains(response, "Contact form information")
+        self.assertContains(response, "A simple contact page or form")
+        self.assertContains(response, "Need guidance information")
+        self.assertContains(response, "help shaping the best next step")
 
     def test_valid_project_enquiry_submission_creates_enquiry(self):
         response = self.client.post(

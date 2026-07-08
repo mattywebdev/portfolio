@@ -34,6 +34,33 @@ CONTENT_STATUS_CHOICES = [
 ]
 
 
+FEATURE_TOOLTIPS = {
+    "contact_form": "A simple contact page or form that sends enquiries to your inbox.",
+    "booking_enquiry_form": "A structured form for bookings, quote requests, appointments, or project enquiries.",
+    "image_gallery": "A tidy way to show photos, work examples, products, venues, or before-and-after images.",
+    "testimonials": "A section for customer quotes, reviews, ratings, or trust signals.",
+    "google_maps": "A map and location details so visitors can find your business or service area.",
+    "blog_news": "An editable area for updates, articles, announcements, or SEO-friendly content.",
+    "product_catalogue": "A browsable list of products or services without necessarily taking online payments.",
+    "admin_editing": "A private admin area so you can edit selected content yourself after launch.",
+    "login_accounts": "User accounts for customers, members, staff, or protected areas.",
+    "payments": "Online payment flow using a provider such as Stripe, depending on the project scope.",
+    "basic_seo": "Practical search basics like page titles, descriptions, clean URLs, and index-friendly structure.",
+    "hosting_domain_help": "Help connecting the site to hosting, domain, DNS, email, or deployment setup.",
+    "ongoing_maintenance": "Support after launch for updates, fixes, small improvements, or monitoring.",
+}
+
+CONTENT_STATUS_TOOLTIPS = {
+    "logo_ready": "You already have a logo file or clear brand mark to use on the site.",
+    "text_ready": "You have written page text, service descriptions, or copy that can be placed into the site.",
+    "photos_ready": "You have usable photos, screenshots, team images, product images, or project photos.",
+    "existing_website": "There is a current website I can review, reuse content from, or improve on.",
+    "need_content_help": "You know the idea, but need help turning it into clear website wording.",
+    "need_stock_images": "You do not have enough imagery yet and may need suitable stock images.",
+    "need_guidance": "You are not sure what is ready yet and want help shaping the best next step.",
+}
+
+
 class ProjectEnquiryForm(forms.ModelForm):
     MINIMUM_SUBMIT_SECONDS = 2
     RENDERED_AT_MAX_AGE_SECONDS = 60 * 60 * 2

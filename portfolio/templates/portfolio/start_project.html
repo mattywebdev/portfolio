@@ -174,6 +174,7 @@
                                             class="choice-info"
                                             type="button"
                                             aria-label="What does {{ option.label }} mean?"
+                                            data-tooltip="{{ option.tooltip }}"
                                         >
                                             i
                                             <span class="choice-tooltip" role="tooltip">{{ option.tooltip }}</span>
@@ -209,6 +210,7 @@
                                             class="choice-info"
                                             type="button"
                                             aria-label="What does {{ option.label }} mean?"
+                                            data-tooltip="{{ option.tooltip }}"
                                         >
                                             i
                                             <span class="choice-tooltip" role="tooltip">{{ option.tooltip }}</span>
@@ -396,6 +398,28 @@
         enquiryForm.querySelectorAll(".choice-info").forEach((button) => {
             button.addEventListener("click", (event) => {
                 event.stopPropagation();
+
+                if (window.matchMedia("(max-width: 640px)").matches) {
+                    let mobileTooltip = document.querySelector("[data-mobile-choice-tooltip]");
+
+                    if (!mobileTooltip) {
+                        mobileTooltip = document.createElement("div");
+                        mobileTooltip.className = "mobile-choice-tooltip";
+                        mobileTooltip.setAttribute("data-mobile-choice-tooltip", "");
+                        mobileTooltip.setAttribute("role", "status");
+                        document.body.appendChild(mobileTooltip);
+                    }
+
+                    mobileTooltip.textContent = button.dataset.tooltip;
+                    mobileTooltip.classList.add("is-visible");
+
+                    window.clearTimeout(mobileTooltip.dismissTimer);
+                    mobileTooltip.dismissTimer = window.setTimeout(() => {
+                        mobileTooltip.classList.remove("is-visible");
+                    }, 3600);
+
+                    return;
+                }
 
                 enquiryForm.querySelectorAll(".choice-info.is-open").forEach((openButton) => {
                     if (openButton !== button) {

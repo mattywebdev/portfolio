@@ -940,6 +940,7 @@ h1 {
     margin: 0;
     padding: 0;
     list-style: none;
+    overflow: visible;
 }
 
 .checkbox-option {
@@ -949,6 +950,7 @@ h1 {
     border: 1px solid var(--border);
     border-radius: 8px;
     background: var(--bg);
+    overflow: visible;
 }
 
 .checkbox-option-row {
@@ -1472,31 +1474,21 @@ h1 {
     }
 
     .choice-tooltip {
-        display: none;
+        left: auto;
+        right: -8px;
+        width: min(230px, calc(100vw - 72px));
+        transform: translateY(4px);
     }
 
-    .mobile-choice-tooltip {
-        position: fixed;
-        left: 16px;
-        right: 16px;
-        bottom: 22px;
-        z-index: 20;
-        padding: 14px 16px;
-        border-radius: 8px;
-        background: var(--ink);
-        box-shadow: 0 18px 36px rgba(15, 23, 42, 0.26);
-        color: #fff;
-        font-size: 0.95rem;
-        font-weight: 750;
-        line-height: 1.45;
-        opacity: 0;
-        transform: translateY(16px);
-        transition: opacity 160ms ease, transform 160ms ease;
-        pointer-events: none;
+    .choice-tooltip::after {
+        left: auto;
+        right: 12px;
+        transform: rotate(45deg);
     }
 
-    .mobile-choice-tooltip.is-visible {
-        opacity: 1;
+    .choice-info:hover .choice-tooltip,
+    .choice-info:focus .choice-tooltip,
+    .choice-info.is-open .choice-tooltip {
         transform: translateY(0);
     }
 

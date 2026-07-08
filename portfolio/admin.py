@@ -23,6 +23,35 @@ def format_selected_choices(selected_values, choices):
     return ", ".join(selected_labels)
 
 
+def format_optional(value):
+    return value or "Not provided"
+
+
+def build_enquiry_brief(enquiry):
+    return "\n".join(
+        [
+            f"Lead: {enquiry.client_name}",
+            f"Business: {format_optional(enquiry.business_name)}",
+            f"Email: {enquiry.email}",
+            f"Phone: {format_optional(enquiry.phone)}",
+            f"Website: {format_optional(enquiry.current_website)}",
+            "",
+            f"Project: {enquiry.get_project_type_display()}",
+            f"Pages: {enquiry.get_pages_needed_display()}",
+            f"Budget: {format_optional(enquiry.get_budget_range_display())}",
+            f"Timeframe: {format_optional(enquiry.get_timeframe_display())}",
+            "",
+            f"Features: {format_selected_choices(enquiry.features, FEATURE_CHOICES)}",
+            f"Content: {format_selected_choices(enquiry.content_status, CONTENT_STATUS_CHOICES)}",
+            "",
+            "Message:",
+            format_optional(enquiry.message),
+            "",
+            f"Next action: {format_optional(enquiry.next_action)}",
+        ]
+    )
+
+
 STATUS_ACTION_LABELS = [
     ("reviewing", "Review"),
     ("contacted", "Contact"),
@@ -164,12 +193,11 @@ class ProjectEnquiryAdmin(admin.ModelAdmin):
     ]
     list_display = [
         "client_name",
-        "business_name",
         "project_type",
         "budget_range",
         "timeframe",
-        "features_summary",
-        "content_status_summary",
+        "next_action_summary",
+        "next_follow_up_at",
         "status_badge",
         "status_actions",
         "created_at",
@@ -178,6 +206,7 @@ class ProjectEnquiryAdmin(admin.ModelAdmin):
     search_fields = ["client_name", "business_name", "email", "current_website", "message"]
     readonly_fields = [
         "status_badge",
+        "client_brief",
         "created_at",
         "updated_at",
     ]
@@ -216,9 +245,19 @@ class ProjectEnquiryAdmin(admin.ModelAdmin):
                 "fields": [
                     "status_badge",
                     "status",
+                    "next_action",
+                    "next_follow_up_at",
                     "internal_notes",
                     "created_at",
                     "updated_at",
+                ]
+            },
+        ),
+        (
+            "Client brief",
+            {
+                "fields": [
+                    "client_brief",
                 ]
             },
         ),
@@ -232,9 +271,26 @@ class ProjectEnquiryAdmin(admin.ModelAdmin):
     def content_status_summary(self, obj):
         return format_selected_choices(obj.content_status, CONTENT_STATUS_CHOICES)
 
+    @admin.display(description="Next action", ordering="next_action")
+    def next_action_summary(self, obj):
+        if not obj.next_action:
+            return "-"
+
+        return obj.next_action
+
     @admin.display(description="Status", ordering="status")
     def status_badge(self, obj):
         return render_status_badge(obj.status)
+
+    @admin.display(description="Copyable brief")
+    def client_brief(self, obj):
+        return format_html(
+            '<textarea readonly rows="16" style="width:100%; max-width:860px; '
+            'font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; '
+            'font-size:13px; line-height:1.5; padding:12px; border:1px solid #d1d5db; '
+            'border-radius:6px; background:#f9fafb;">{}</textarea>',
+            build_enquiry_brief(obj),
+        )
 
     @admin.display(description="Quick status")
     def status_actions(self, obj):

@@ -111,6 +111,8 @@ class ProjectEnquiry(models.Model):
     current_website = models.URLField(blank=True)
     message = models.TextField(blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="new")
+    next_action = models.CharField(max_length=180, blank=True)
+    next_follow_up_at = models.DateTimeField(blank=True, null=True)
     internal_notes = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

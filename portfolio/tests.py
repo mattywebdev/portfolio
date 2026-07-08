@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from django.test import override_settings
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 
 from .forms import ProjectEnquiryForm
 from .models import Project, ProjectEnquiry, ProjectEnquirySpamAttempt, Technology
@@ -365,12 +366,15 @@ class ProjectEnquiryAdminTests(TestCase):
             client_name="Test Client",
             business_name="Test Business",
             email="test@example.com",
+            next_action="Reply with scope questions",
+            next_follow_up_at=timezone.now(),
         )
 
         response = self.client.get(reverse("admin:portfolio_projectenquiry_changelist"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Contact form, Basic SEO setup")
+        self.assertContains(response, "Reply with scope questions")
+        self.assertNotContains(response, "Contact form, Basic SEO setup")
         self.assertContains(response, "background:#e0f2fe")
         self.assertContains(response, "color:#075985")
         self.assertContains(response, ">New</span>")
@@ -442,6 +446,10 @@ class ProjectEnquiryAdminTests(TestCase):
             client_name="Detail Client",
             business_name="Detail Business",
             email="detail@example.com",
+            phone="07123456789",
+            current_website="https://example.com",
+            message="I need help shaping a clean service website.",
+            next_action="Send a short discovery reply",
         )
 
         response = self.client.get(
@@ -451,3 +459,10 @@ class ProjectEnquiryAdminTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Status:")
         self.assertContains(response, ">New</span>")
+        self.assertContains(response, "Copyable brief")
+        self.assertContains(response, "Lead: Detail Client")
+        self.assertContains(response, "Business: Detail Business")
+        self.assertContains(response, "Phone: 07123456789")
+        self.assertContains(response, "Website: https://example.com")
+        self.assertContains(response, "Project: New business website")
+        self.assertContains(response, "Next action: Send a short discovery reply")

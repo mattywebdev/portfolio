@@ -607,6 +607,27 @@ h1 {
     font-size: 1.25rem;
 }
 
+.project-detail-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 28px;
+    border: 1px solid rgba(8, 117, 104, 0.28);
+    border-radius: 8px;
+    background: var(--surface-soft);
+}
+
+.project-detail-cta h2 {
+    max-width: 760px;
+    margin: 0;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+}
+
+.project-detail-cta .eyebrow {
+    margin-bottom: 10px;
+}
+
 .start-project-page {
     padding-bottom: 24px;
 }
@@ -1189,10 +1210,7 @@ h1 {
 }
 
 .email-confirmation-toast.is-hiding {
-    opacity: 0;
-    transform: translate(-50%, -120%);
-    transition: opacity 220ms ease, transform 220ms ease;
-    animation: none;
+    animation: toast-slide-up 320ms ease forwards;
 }
 
 .email-confirmation-toast span {
@@ -1291,6 +1309,18 @@ h1 {
     }
 }
 
+@keyframes toast-slide-up {
+    from {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(-50%, -120%);
+    }
+}
+
 .thanks-next-steps {
     padding: 20px;
     border: 1px solid var(--border);
@@ -1383,6 +1413,11 @@ h1 {
 @media (max-width: 760px) {
     .case-study-grid {
         grid-template-columns: 1fr;
+    }
+
+    .project-detail-cta {
+        align-items: flex-start;
+        flex-direction: column;
     }
 
     .planner-grid,

@@ -1,11 +1,11 @@
 ABOUT = {
     "eyebrow": "About me",
-    "title": "Self-taught Django developer building real web apps.",
+    "title": "Self-taught Django developer building practical websites and tools.",
     "body": (
         "I am Mateusz, also known as Matty, a self-taught Django developer focused "
-        "on practical full-stack web applications. I like building projects that feel "
-        "close to real client or business needs: e-commerce flows, admin-managed content, "
-        "analytics, REST endpoints, responsive interfaces, and Linux VPS deployments."
+        "on practical full-stack web applications. I like building projects that solve "
+        "real business problems: clear service pages, structured enquiry flows, "
+        "admin-managed content, responsive interfaces, and Linux VPS deployments."
     ),
     "assurance_title": "What I can help with",
     "assurance": (
@@ -34,24 +34,24 @@ PROFILE_LINKS = [
 
 SERVICES = {
     "eyebrow": "Services",
-    "title": "Websites that are clear, editable, and ready to use.",
+    "title": "Websites that explain the business and make enquiries easier.",
     "intro": (
-        "I help small businesses and independent professionals turn a rough idea into "
-        "a practical website that explains what they do, looks good on phones, and can "
-        "be updated without stress."
+        "I help small businesses and independent professionals turn scattered ideas into "
+        "clear websites with useful pages, sensible forms, mobile-friendly layouts, and "
+        "content that can be maintained after launch."
     ),
     "items": [
         {
-            "title": "A professional online presence",
-            "description": "Clean pages for services, portfolios, contact details, product highlights, and the information customers need before getting in touch.",
+            "title": "Small business websites",
+            "description": "Clear service pages, contact details, trust signals, and calls to action so visitors understand what you offer and how to enquire.",
         },
         {
-            "title": "Easy content updates",
-            "description": "Simple admin areas for changing text, images, articles, products, or project details without digging through code.",
+            "title": "Editable content and admin tools",
+            "description": "Django admin areas for changing text, images, articles, products, project details, or enquiry records without digging through code.",
         },
         {
-            "title": "Launch and aftercare",
-            "description": "Help getting the site online, connected to a domain, checked on mobile, and set up in a way that can be maintained properly.",
+            "title": "Forms, launch, and aftercare",
+            "description": "Contact or enquiry forms, email notifications, domain and VPS setup, mobile checks, and a launch process that does not leave you guessing.",
         },
     ],
     "process": ["Discuss", "Plan", "Build", "Review", "Launch"],

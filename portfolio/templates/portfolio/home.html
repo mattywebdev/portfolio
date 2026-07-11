@@ -15,22 +15,23 @@
 {% block content %}
 <main class="page">
     <section class="hero">
-        <p class="eyebrow">Django websites, business tools, and deployed web apps</p>
-        <h1>Django websites for businesses, portfolios, and real products.</h1>
+        <p class="eyebrow">Website design and Django development in Crewe</p>
+        <h1>Clear websites and practical web apps for small businesses.</h1>
         <p class="hero-copy">
-            I’m Matty, a self-taught Django developer building admin-managed websites,
-            product/catalog pages, REST-backed apps, and Linux VPS deployments.
+            I’m Matty, a Django developer helping small businesses turn rough ideas
+            into mobile-friendly websites, enquiry flows, editable pages, and useful
+            web tools that are actually ready to launch.
         </p>
         <div class="hero-actions">
-            <a class="button primary" href="#projects">View my work</a>
-            <a class="button secondary" href="{% url 'portfolio:start_project' %}">Start a project</a>
+            <a class="button primary" href="{% url 'portfolio:start_project' %}">Start a project</a>
+            <a class="button secondary" href="#projects">View my work</a>
         </div>
 
         <ul class="proof-strip" aria-label="Key capabilities">
-            <li>Django admin</li>
-            <li>Responsive pages</li>
-            <li>REST APIs</li>
-            <li>VPS deployment</li>
+            <li>Business websites</li>
+            <li>Editable content</li>
+            <li>Enquiry forms</li>
+            <li>Launch support</li>
         </ul>
     </section>
 
@@ -57,7 +58,11 @@
     <section id="projects" class="section">
         <div class="section-heading">
             <p class="eyebrow">Selected work</p>
-            <h2>Projects</h2>
+            <h2>Real builds, not mockups.</h2>
+            <p>
+                A few projects showing the kind of practical Django work I like:
+                clean interfaces, editable content, forms, admin workflows, and deployed sites.
+            </p>
         </div>
 
             {{ projects|json_script:"projects-data" }}
@@ -89,10 +94,10 @@
 
         <div class="service-cta">
             <div>
-                <p class="eyebrow">Project idea?</p>
-                <h3>Turn a rough brief into practical next steps.</h3>
+                <p class="eyebrow">Not sure what to ask for?</p>
+                <h3>Send the rough version. I’ll help shape the sensible next step.</h3>
             </div>
-            <a class="button primary" href="{% url 'portfolio:start_project' %}">Plan a project</a>
+            <a class="button primary" href="{% url 'portfolio:start_project' %}">Use the project planner</a>
         </div>
     </section>
 
@@ -121,11 +126,11 @@
     <section id="contact" class="section contact-section">
         <div class="contact-copy">
             <p class="eyebrow">Let’s build</p>
-            <h2>Ready to talk?</h2>
+            <h2>Ready to talk about a project or role?</h2>
             <p>
-                I’m open to junior web developer roles, IT support opportunities, and practical
-                business website projects. If you like the work here, send me a message and I’ll
-                get back to you clearly.
+                I’m open to practical website projects, junior web developer roles, and IT support
+                opportunities. If the work here feels close to what you need, send the context and
+                I’ll reply with clear next steps.
             </p>
 
             <ul class="contact-points">

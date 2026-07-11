@@ -98,10 +98,7 @@
     }
 
     .email-confirmation-toast.is-hiding {
-        opacity: 0;
-        transform: translate(-50%, -120%);
-        transition: opacity 220ms ease, transform 220ms ease;
-        animation: none;
+        animation: toast-slide-up 320ms ease forwards;
     }
 
     .email-confirmation-toast span {
@@ -150,6 +147,18 @@
         to {
             opacity: 1;
             transform: translate(-50%, 0);
+        }
+    }
+
+    @keyframes toast-slide-up {
+        from {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        to {
+            opacity: 0;
+            transform: translate(-50%, -120%);
         }
     }
 
@@ -247,7 +256,7 @@
             toast.classList.add("is-hiding");
             window.setTimeout(function () {
                 toast.remove();
-            }, 260);
+            }, 340);
         }
 
         dismissTimer = window.setTimeout(dismissToast, 6500);

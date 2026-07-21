@@ -67,6 +67,12 @@ class HomePageTests(TestCase):
 
         self.assertContains(response, reverse("portfolio:privacy_policy"))
 
+    def test_home_page_has_keyboard_skip_link(self):
+        response = self.client.get(reverse("portfolio:home"))
+
+        self.assertContains(response, 'href="#main-content"')
+        self.assertContains(response, 'id="main-content"')
+
     def test_home_page_includes_projects_in_context(self):
         response = self.client.get(reverse("portfolio:home"))
 

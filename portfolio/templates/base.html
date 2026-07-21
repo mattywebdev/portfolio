@@ -36,9 +36,10 @@
     <link rel="icon" type="image/png" sizes="192x192" href="{% static 'portfolio/images/favicon-192x192.png' %}">
     <link rel="icon" type="image/png" sizes="512x512" href="{% static 'portfolio/images/favicon-512x512.png' %}">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'portfolio/images/apple-touch-icon.png' %}">
-    <link rel="stylesheet" href="{% static 'portfolio/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'portfolio/css/styles.css' %}?v=20260721">
 </head>
 <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <header class="site-header">
         <a class="brand" href="{% url 'portfolio:home' %}">Matty Dev</a>
 
@@ -66,6 +67,56 @@
             <a href="mailto:hello@matty-dev.com">Email</a>
         </div>
     </footer>
+    <script>
+        (function () {
+            var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+            if (prefersReducedMotion) {
+                return;
+            }
+
+            document.addEventListener("click", function (event) {
+                var link = event.target.closest("a");
+
+                if (!link || event.defaultPrevented || event.button !== 0) {
+                    return;
+                }
+
+                if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+                    return;
+                }
+
+                if (link.target || link.hasAttribute("download")) {
+                    return;
+                }
+
+                var destination = new URL(link.href, window.location.href);
+
+                if (destination.origin !== window.location.origin) {
+                    return;
+                }
+
+                if (
+                    destination.pathname === window.location.pathname &&
+                    destination.search === window.location.search &&
+                    destination.hash
+                ) {
+                    return;
+                }
+
+                event.preventDefault();
+                document.body.classList.add("page-is-leaving");
+
+                window.setTimeout(function () {
+                    window.location.href = destination.href;
+                }, 90);
+            });
+
+            window.addEventListener("pageshow", function () {
+                document.body.classList.remove("page-is-leaving");
+            });
+        }());
+    </script>
     {% block scripts %}{% endblock %}
 </body>
 </html>

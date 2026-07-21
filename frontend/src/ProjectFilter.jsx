@@ -18,17 +18,23 @@ export default function ProjectFilter({ projects }) {
 
     return (
         <div className="react-projects">
-            <div className="filter-bar" aria-label="Filter projects by technology">
+            <div className="filter-toolbar">
+                <div className="filter-bar" aria-label="Filter projects by technology">
                 {techOptions.map((tech) => (
                     <button
                         className={tech === selectedTech ? "filter-button active" : "filter-button"}
                         key={tech}
                         type="button"
+                        aria-pressed={tech === selectedTech}
                         onClick={() => setSelectedTech(tech)}
                     >
                         {tech}
                     </button>
                 ))}
+                </div>
+                <p className="filter-result" aria-live="polite">
+                    {visibleProjects.length} {visibleProjects.length === 1 ? "project" : "projects"}
+                </p>
             </div>
 
             <div className="project-grid">
@@ -36,7 +42,13 @@ export default function ProjectFilter({ projects }) {
                     <article className="project-card" key={project.title}>
                         {project.image_url && (
                             <a className="project-card-image-link" href={project.detail_url} aria-label={`${project.title} case study`}>
-                                <img className="project-card-image" src={project.image_url} alt={`${project.title} screenshot`} />
+                                <img
+                                    className="project-card-image"
+                                    src={project.image_url}
+                                    alt={`${project.title} screenshot`}
+                                    loading="lazy"
+                                    decoding="async"
+                                />
                             </a>
                         )}
 
